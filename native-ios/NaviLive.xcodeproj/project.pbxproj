@@ -10,7 +10,6 @@
 		06958A47A1002FA58CB68A74 /* ActiveNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03767591A56E06E6FFCB04CE /* ActiveNavigationView.swift */; };
 		07414C96AC90CD5FA9147476 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B2A0337352D66E8A360F3C /* SettingsStore.swift */; };
 		07F81BCC30E50DB47C3CBC46 /* NavigationAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D343A44E647E9CDBA9A67965 /* NavigationAPIClient.swift */; };
-		08A8E9F7F49B4C8F9D5E1A67 /* NearbyPOICacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A8E9F6F49B4C8F9D5E1A67 /* NearbyPOICacheStore.swift */; };
 		0A727924E9393537C053D5E0 /* Home.strings in Resources */ = {isa = PBXBuildFile; fileRef = D82D7C773258DFFF3DE6CF72 /* Home.strings */; };
 		0FCFDC0BC235516045218C29 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11124081EBC132E3DFB9E66C /* RootView.swift */; };
 		114F447D8756E33026880C60 /* Settings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E618E60700E5B7FE368E913 /* Settings.strings */; };
@@ -34,6 +33,7 @@
 		88018F484A3A296F4559CE44 /* HelpPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64560F0226C2CDBDAF74D1D /* HelpPrivacyView.swift */; };
 		90AF711D859A2B2C17D90C37 /* Navigation.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1E4EA80BF25826086C32691 /* Navigation.strings */; };
 		9426DAAF93AE77EEC6C8D7A9 /* SharedProductRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C14B84A8028291FF5A6A19A /* SharedProductRules.swift */; };
+		976FD8FE37FAEC8610B23532 /* NearbyPOICacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E840C7A6978829E5FA86D809 /* NearbyPOICacheStore.swift */; };
 		9C86CF87767842772836867A /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11058C064BC60B138D61F99 /* L10n.swift */; };
 		A4C47CD9F06CDF8D2E86BE5E /* VoiceOverAnnouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7DF491966F886FE4B8E440 /* VoiceOverAnnouncer.swift */; };
 		AD6007813C51894E0F5DF7BB /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18487FD8F48CF4E503764348 /* FavoritesStore.swift */; };
@@ -68,7 +68,6 @@
 		09B2A0337352D66E8A360F3C /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		0AEAC83D4760702B11A12B34 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Navigation.strings; sourceTree = "<group>"; };
 		0C14B84A8028291FF5A6A19A /* SharedProductRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedProductRules.swift; sourceTree = "<group>"; };
-		08A8E9F6F49B4C8F9D5E1A67 /* NearbyPOICacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyPOICacheStore.swift; sourceTree = "<group>"; };
 		11124081EBC132E3DFB9E66C /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		140D517E87A2626B5B45D480 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		18487FD8F48CF4E503764348 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
@@ -112,6 +111,7 @@
 		E6A59B85F4252BF167DAA794 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Home.strings; sourceTree = "<group>"; };
 		E73F4234A24A54E9E134A27B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/General.strings; sourceTree = "<group>"; };
 		E7714BB9FBA3D087F812E80B /* ArrivalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalView.swift; sourceTree = "<group>"; };
+		E840C7A6978829E5FA86D809 /* NearbyPOICacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyPOICacheStore.swift; sourceTree = "<group>"; };
 		E9F9905A660DAB0DD278DCB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Onboarding.strings; sourceTree = "<group>"; };
 		F1FEAC230D0EFD6DD27095C1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F59862EB3C6B4C6605F10AF6 /* RouteSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSummaryView.swift; sourceTree = "<group>"; };
@@ -221,10 +221,10 @@
 			children = (
 				862DCDF8A73FE50A6CB0714A /* AddressFormattingCore.swift */,
 				50842925B9EA45DD9585BC90 /* LiveNavigationEngine.swift */,
-				08A8E9F6F49B4C8F9D5E1A67 /* NearbyPOICacheStore.swift */,
 				D343A44E647E9CDBA9A67965 /* NavigationAPIClient.swift */,
 				9BD060FDF03C68530A12DCAE /* NavigationInstructionCore.swift */,
 				A83A2223D0BBECFF001224B2 /* NavigationScenarioCore.swift */,
+				E840C7A6978829E5FA86D809 /* NearbyPOICacheStore.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -473,11 +473,11 @@
 				6384158350D4DE8FF41E3F63 /* LiveNavigationEngine.swift in Sources */,
 				4B3FEA239C2BAECDD7BDCCFA /* LocationService.swift in Sources */,
 				32317B870D6B5B0EFC16CF37 /* NaviLiveApp.swift in Sources */,
-				08A8E9F7F49B4C8F9D5E1A67 /* NearbyPOICacheStore.swift in Sources */,
 				07F81BCC30E50DB47C3CBC46 /* NavigationAPIClient.swift in Sources */,
 				680EB5C34143C14B0F5E3748 /* NavigationInstructionCore.swift in Sources */,
 				F3CA6CDB6CA634195135B2A3 /* NavigationModels.swift in Sources */,
 				F6FAC519C86491E2A1FAF8C4 /* NavigationScenarioCore.swift in Sources */,
+				976FD8FE37FAEC8610B23532 /* NearbyPOICacheStore.swift in Sources */,
 				E90BEE4063A3AD625655713A /* OnboardingView.swift in Sources */,
 				E5B22FA289EC760B736BDF21 /* PermissionsView.swift in Sources */,
 				D3C1F472147EDF844BD7F676 /* PlaceDetailsView.swift in Sources */,
@@ -584,7 +584,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -624,7 +624,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
