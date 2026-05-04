@@ -410,9 +410,10 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 7AEC6E9416D2C274BC6D5C80 /* Build configuration list for PBXProject "NaviLive" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -423,6 +424,7 @@
 			mainGroup = F25F8011A9AEC2007B26D456;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = E2AB35BFBD75AE4FA2977CB3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
