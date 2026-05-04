@@ -68,22 +68,6 @@ struct HomeView: View {
       }
     }
     .listStyle(.insetGrouped)
-    .safeAreaInset(edge: .bottom, alignment: .trailing) {
-      HStack {
-        Spacer()
-        SecondaryActionButton(
-          title: L10n.text("home.action.settings", table: .home),
-          systemImage: "gearshape"
-        ) {
-          model.openSettings()
-        }
-        .frame(maxWidth: 260)
-      }
-      .padding(.horizontal, 16)
-      .padding(.top, 8)
-      .padding(.bottom, 6)
-      .background(.regularMaterial)
-    }
     .navigationTitle(L10n.text("home.title", table: .home))
     .navigationBarTitleDisplayMode(.large)
     .refreshable {

@@ -88,6 +88,8 @@
     <string name="place_details_show_route">Show route</string>
     <string name="common_remove_from_favorites">Remove from favorites</string>
     <string name="common_save_favorite">Save favorite</string>
+    <string name="common_save">Save</string>
+    <string name="common_cancel">Cancel</string>
 
     <string name="route_summary_title">Route summary</string>
     <string name="route_summary_status_title">Walking route ready</string>
@@ -128,6 +130,9 @@
     <string name="current_position_current_address">Current address</string>
     <string name="current_position_accuracy">Approximate accuracy: %1$d m</string>
     <string name="current_position_read_aloud">Read my location aloud</string>
+    <string name="current_position_save_current">Save current position</string>
+    <string name="current_position_save_dialog_title">Name this point</string>
+    <string name="current_position_save_dialog_name_label">Point name</string>
     <string name="current_position_search_destination">Search for a destination</string>
     <string name="common_favorites">Favorites</string>
     <string name="current_position_no_favorites_title">No favorites yet</string>
@@ -311,7 +316,7 @@
     <string name="format_navigation_upcoming_instruction_distance">In %1$d meters, %2$s</string>
     <string name="format_navigation_upcoming_instruction_time">In %1$d seconds, %2$s</string>
     <string name="format_navigation_upcoming_instruction">In %1$d meters, %2$s</string>
-    <string name="format_navigation_immediate_instruction">Now %1$s</string>
+    <string name="format_navigation_immediate_instruction">Now: %1$s</string>
     <string name="format_current_position_announcement">%1$s Current position: %2$s</string>
     <string name="format_telemetry_exported">Telemetry exported to %1$s.</string>
     <string name="format_coordinates_label">Lat %1$s, Lon %2$s</string>
@@ -371,6 +376,9 @@
     <string name="status_search_service_unavailable">Search service unavailable, using local list.</string>
     <string name="status_setup_complete">Setup complete. Continue with permissions.</string>
     <string name="status_saved_to_favorites">Saved to favorites.</string>
+    <string name="current_position_save_name_required">Enter a name for this point.</string>
+    <string name="format_current_position_saved_named">%1$s saved to favorites.</string>
+    <string name="format_current_position_already_saved_named">%1$s is already saved in favorites.</string>
     <string name="status_removed_from_favorites">Removed from favorites.</string>
     <string name="status_system_voice_selected">System synthesizer selected.</string>
     <string name="status_default_system_tts_selected">Default system TTS engine selected.</string>
@@ -422,14 +430,18 @@
     <string name="generic_route_mode_walk">Walk</string>
     <string name="generic_follow_route_guidance">Follow route guidance.</string>
     <string name="generic_destination_ahead">Destination ahead.</string>
-    <string name="generic_arriving_destination">You are arriving at destination.</string>
+    <string name="generic_arriving_destination">You have arrived</string>
     <string name="generic_next_segment">the next segment</string>
 
-    <string name="route_step_depart">Start and continue on %1$s.</string>
-    <string name="route_step_turn_generic">Turn onto %1$s.</string>
-    <string name="route_step_turn_with_modifier">Turn %1$s onto %2$s.</string>
-    <string name="route_step_continue">Continue on %1$s.</string>
-    <string name="route_step_proceed_toward">Proceed toward %1$s.</string>
+    <string name="route_step_depart">Start. Continue on %1$s</string>
+    <string name="route_step_depart_default">Start walking</string>
+    <string name="route_step_turn_default">Continue on the route</string>
+    <string name="route_step_turn_bare_modifier">Turn %1$s</string>
+    <string name="route_step_continue_default">Continue</string>
+    <string name="route_step_turn_generic">Turn. Continue on %1$s</string>
+    <string name="route_step_turn_with_modifier">Turn %1$s. Continue on %2$s</string>
+    <string name="route_step_continue">Continue on %1$s</string>
+    <string name="route_step_proceed_toward">Proceed toward %1$s</string>
     <string name="route_step_crossing">Pedestrian crossing on the route. Use caution.</string>
     <string name="route_modifier_left">left</string>
     <string name="route_modifier_right">right</string>

@@ -144,7 +144,7 @@ class OpenStreetRoutingRepository(
         const val NEARBY_ADDRESS_LOOKUP_RADIUS_METERS = 80
         const val NEARBY_ADDRESS_LOOKUP_LIMIT = 220
         const val ROUTE_REQUEST_TIMEOUT_MS = 10_000
-        const val ROUTE_ROAD_NAME_REQUEST_TIMEOUT_MS = 5_000
+        const val ROUTE_ROAD_NAME_REQUEST_TIMEOUT_MS = 8_000
         const val CROSSING_REQUEST_TIMEOUT_MS = 2_000
         const val CROSSING_DUPLICATE_PROXIMITY_METERS = 3.0
         const val CROSSING_TURN_PROXIMITY_METERS = 8.0
@@ -344,7 +344,7 @@ class OpenStreetRoutingRepository(
                 ?.optJSONArray("steps")
             val pathPoints = parsePath(route.optJSONObject("geometry"))
             val namedRouteWays = queryNamedRouteWays(pathPoints)
-            val baseSteps = parseSteps(steps, namedRouteWays)
+            val baseSteps = simplifyRouteSteps(parseSteps(steps, namedRouteWays))
             val parsedSteps = if (includePedestrianCrossings) {
                 addPedestrianCrossingSteps(
                     steps = baseSteps,
@@ -423,12 +423,16 @@ class OpenStreetRoutingRepository(
                 maneuverPoint = maneuverPoint,
                 namedRouteWays = namedRouteWays,
             )
+            val roadName = step.optString("name").trim().ifBlank {
+                inferredRoadName?.trim().orEmpty()
+            }.takeIf { it.isNotBlank() }
             parsed += RouteStep(
-                instruction = instructionForStep(step, inferredRoadName),
+                instruction = instructionForStep(step, roadName),
                 distanceMeters = step.optDouble("distance", 0.0).roundToInt(),
                 maneuverPoint = maneuverPoint,
                 maneuverType = maneuver?.optString("type")?.takeIf { it.isNotBlank() },
                 maneuverModifier = maneuver?.optString("modifier")?.takeIf { it.isNotBlank() },
+                roadName = roadName,
             )
         }
         return parsed.ifEmpty {
@@ -449,6 +453,43 @@ class OpenStreetRoutingRepository(
         }
         return points
     }
+
+    private fun simplifyRouteSteps(steps: List<RouteStep>): List<RouteStep> {
+        if (steps.size <= 2) return steps
+        val simplified = mutableListOf<RouteStep>()
+        steps.forEachIndexed { index, step ->
+            val previous = simplified.lastOrNull()
+            if (shouldSuppressRouteStep(step, previous, index, steps.lastIndex)) {
+                simplified[simplified.lastIndex] = previous!!.copy(
+                    distanceMeters = previous.distanceMeters + step.distanceMeters,
+                )
+            } else {
+                simplified += step
+            }
+        }
+        return simplified.ifEmpty { steps }
+    }
+
+    private fun shouldSuppressRouteStep(
+        step: RouteStep,
+        previous: RouteStep?,
+        index: Int,
+        lastIndex: Int,
+    ): Boolean {
+        if (previous == null || index == 0 || index == lastIndex) return false
+        if (step.kind != RouteStepKind.Instruction || previous.kind != RouteStepKind.Instruction) return false
+        if (step.maneuverType.equals("arrive", ignoreCase = true)) return false
+        val currentRoad = normalizedRouteRoadName(step.roadName) ?: return false
+        val previousRoad = normalizedRouteRoadName(previous.roadName) ?: return false
+        if (currentRoad != previousRoad) return false
+        return step.isTurnLikeManeuver() || step.distanceMeters <= 35
+    }
+
+    private fun normalizedRouteRoadName(value: String?): String? = value
+        ?.trim()
+        ?.lowercase(Locale.ROOT)
+        ?.replace(Regex("\\s+"), " ")
+        ?.takeIf { it.isNotBlank() }
 
     private fun addPedestrianCrossingSteps(
         steps: List<RouteStep>,
@@ -599,6 +640,7 @@ class OpenStreetRoutingRepository(
         return listOf(
             "https://overpass-api.de/api/interpreter?data=$encoded",
             "https://overpass.kumi.systems/api/interpreter?data=$encoded",
+            "https://overpass.osm.ch/api/interpreter?data=$encoded",
         )
     }
 
@@ -624,6 +666,7 @@ class OpenStreetRoutingRepository(
         return listOf(
             "https://overpass-api.de/api/interpreter?data=$encoded",
             "https://overpass.kumi.systems/api/interpreter?data=$encoded",
+            "https://overpass.osm.ch/api/interpreter?data=$encoded",
         )
     }
 
@@ -821,7 +864,6 @@ class OpenStreetRoutingRepository(
         val roadName = step.optString("name").trim().ifBlank {
             inferredRoadName?.trim()?.takeIf { it.isNotBlank() }
         }
-        val fallbackRoad = roadName ?: string(R.string.generic_next_segment)
         val descriptor = NavigationInstructionCore.describe(
             maneuverType = maneuverType,
             modifier = maneuver?.optString("modifier"),
@@ -829,31 +871,44 @@ class OpenStreetRoutingRepository(
         )
         return when (descriptor.strategy) {
             NavigationInstructionDescriptor.Strategy.DepartNamed ->
-                string(R.string.route_step_depart, descriptor.roadName ?: fallbackRoad)
+                descriptor.roadName?.let { string(R.string.route_step_depart, it) }
+                    ?: string(R.string.route_step_depart_default)
             NavigationInstructionDescriptor.Strategy.Arrive ->
                 string(R.string.generic_arriving_destination)
             NavigationInstructionDescriptor.Strategy.TurnNamed -> {
                 val localizedModifier = routeModifier(descriptor.normalizedModifier)
-                string(
-                    R.string.route_step_turn_with_modifier,
-                    localizedModifier.ifBlank { descriptor.normalizedModifier ?: "" },
-                    descriptor.roadName ?: fallbackRoad,
-                )
+                val road = descriptor.roadName
+                if (road.isNullOrBlank()) {
+                    if (localizedModifier.isBlank()) {
+                        string(R.string.route_step_turn_default)
+                    } else {
+                        string(R.string.route_step_turn_bare_modifier, localizedModifier)
+                    }
+                } else {
+                    string(
+                        R.string.route_step_turn_with_modifier,
+                        localizedModifier.ifBlank { descriptor.normalizedModifier ?: "" },
+                        road,
+                    )
+                }
             }
             NavigationInstructionDescriptor.Strategy.TurnGenericNamed ->
-                string(R.string.route_step_turn_generic, descriptor.roadName ?: fallbackRoad)
+                descriptor.roadName?.let { string(R.string.route_step_turn_generic, it) }
+                    ?: string(R.string.route_step_turn_default)
             NavigationInstructionDescriptor.Strategy.TurnBareModifier -> {
                 val localizedModifier = routeModifier(descriptor.normalizedModifier)
                 if (localizedModifier.isBlank()) {
-                    string(R.string.route_step_turn_generic, fallbackRoad)
+                    string(R.string.route_step_turn_default)
                 } else {
-                    string(R.string.route_step_turn_with_modifier, localizedModifier, fallbackRoad)
+                    string(R.string.route_step_turn_bare_modifier, localizedModifier)
                 }
             }
             NavigationInstructionDescriptor.Strategy.ContinueNamed ->
-                string(R.string.route_step_continue, descriptor.roadName ?: fallbackRoad)
+                descriptor.roadName?.let { string(R.string.route_step_continue, it) }
+                    ?: string(R.string.route_step_continue_default)
             NavigationInstructionDescriptor.Strategy.ProceedTowardNamed ->
-                string(R.string.route_step_proceed_toward, descriptor.roadName ?: fallbackRoad)
+                descriptor.roadName?.let { string(R.string.route_step_proceed_toward, it) }
+                    ?: string(R.string.route_step_continue_default)
         }
     }
 

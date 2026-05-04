@@ -17,6 +17,7 @@ import android.content.ContextWrapper
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +47,7 @@ import com.navilive.android.ui.screens.BootstrapScreen
 import com.navilive.android.ui.screens.CurrentPositionScreen
 import com.navilive.android.ui.screens.FavoritesScreen
 import com.navilive.android.ui.screens.HelpPrivacyScreen
+import com.navilive.android.ui.screens.LocalOpenSettings
 import com.navilive.android.ui.screens.HeadingAlignScreen
 import com.navilive.android.ui.screens.NotFoundScreen
 import com.navilive.android.ui.screens.OnboardingScreen
@@ -184,10 +186,17 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
         }
     }
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Bootstrap,
-    ) {
+    val openSettings: () -> Unit = {
+        navController.navigate(Routes.Settings) {
+            launchSingleTop = true
+        }
+    }
+
+    CompositionLocalProvider(LocalOpenSettings provides openSettings) {
+        NavHost(
+            navController = navController,
+            startDestination = Routes.Bootstrap,
+        ) {
         composable(Routes.Bootstrap) {
             LaunchedEffect(
                 uiState.value.isPreferencesLoaded,
@@ -298,7 +307,6 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
                 onOpenQuickFavorite = { placeId ->
                     navController.navigate(Routes.routeSummary(placeId))
                 },
-                onSettings = { navController.navigate(Routes.Settings) },
                 onGrantLocationPermission = {
                     permissionLauncher.launch(locationPermissionsForRequest())
                 },
@@ -468,6 +476,7 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
                 hasLocationPermission = uiState.value.locationState.hasPermission,
                 quickFavorites = viewModel.getFavorites(),
                 onReadLocation = viewModel::announceCurrentLocation,
+                onSaveCurrentLocationAsFavorite = viewModel::saveCurrentLocationAsFavorite,
                 onSearch = { navController.navigate(Routes.Search) },
                 onPickFavorite = { placeId ->
                     navController.navigate(Routes.routeSummary(placeId))
@@ -570,6 +579,7 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
             )
         }
     }
+}
 }
 
 private fun closeApp(context: Context) {

@@ -194,7 +194,16 @@ final class AppModel: ObservableObject {
     settingsStore.setFavorites(favorites)
   }
 
-  func saveCurrentLocationAsFavorite() async {
+  func saveCurrentLocationAsFavorite(named customName: String) async {
+    let savedName = customName.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !savedName.isEmpty else {
+      let message = L10n.text("current.position.name_required", table: .home)
+      statusMessage = message
+      currentPositionStatusMessage = message
+      currentPositionStatusIsWarning = true
+      announceWarning(message: message)
+      return
+    }
     guard let fix = locationService.latestFix else {
       let message = L10n.text("current.position.save_unavailable", table: .home)
       statusMessage = message
@@ -203,10 +212,9 @@ final class AppModel: ObservableObject {
       announceWarning(message: message)
       return
     }
-    let savedName = L10n.text("current.position.saved_name", table: .home)
     let address = currentLocationDescription.isEmpty ? L10n.text("current.position.unknown", table: .home) : currentLocationDescription
     if favorites.contains(where: { isSameSavedCurrentPosition($0, savedName: savedName, address: address, point: fix.point) }) {
-      let message = L10n.text("current.position.already_saved", table: .home)
+      let message = L10n.text("current.position.already_saved_named", table: .home, savedName)
       statusMessage = message
       currentPositionStatusMessage = message
       currentPositionStatusIsWarning = false
@@ -224,7 +232,7 @@ final class AppModel: ObservableObject {
     favorites.append(place)
     knownPlaces[place.id] = place
     settingsStore.setFavorites(favorites)
-    let message = L10n.text("current.position.saved_status", table: .home)
+    let message = L10n.text("current.position.saved_named", table: .home, savedName)
     statusMessage = message
     currentPositionStatusMessage = message
     currentPositionStatusIsWarning = false

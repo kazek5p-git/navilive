@@ -14,7 +14,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.navilive.android.model.AnnouncementCadenceMode
+import com.navilive.android.model.GeoPoint
 import com.navilive.android.model.NearbyPoiCacheMode
+import com.navilive.android.model.Place
 import com.navilive.android.model.UpdateChannel
 import com.navilive.android.model.SpeechOutputMode
 import com.navilive.android.model.SettingsState
@@ -25,6 +27,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -42,6 +46,7 @@ private val Context.naviLiveDataStore by preferencesDataStore(
 
 data class PersistedNaviLiveState(
     val favoriteIds: Set<String>,
+    val customFavoritePlaces: List<Place>,
     val lastRoutePlaceId: String?,
     val hasCompletedOnboarding: Boolean,
     val settingsState: SettingsState,
@@ -68,6 +73,16 @@ class NaviLivePreferencesStore(
     suspend fun setFavoriteIds(favoriteIds: Set<String>) {
         context.naviLiveDataStore.edit { prefs ->
             prefs[Keys.FavoriteIds] = favoriteIds
+        }
+    }
+
+    suspend fun setCustomFavoritePlaces(places: List<Place>) {
+        context.naviLiveDataStore.edit { prefs ->
+            if (places.isEmpty()) {
+                prefs.remove(Keys.CustomFavoritePlacesJson)
+            } else {
+                prefs[Keys.CustomFavoritePlacesJson] = encodeCustomFavoritePlaces(places)
+            }
         }
     }
 
@@ -252,6 +267,7 @@ class NaviLivePreferencesStore(
     private fun mapPreferences(preferences: Preferences): PersistedNaviLiveState {
         return PersistedNaviLiveState(
             favoriteIds = preferences[Keys.FavoriteIds] ?: defaultFavoriteIds,
+            customFavoritePlaces = decodeCustomFavoritePlaces(preferences[Keys.CustomFavoritePlacesJson]),
             lastRoutePlaceId = preferences[Keys.LastRoutePlaceId] ?: defaultLastRoutePlaceId,
             hasCompletedOnboarding = preferences[Keys.HasCompletedOnboarding] ?: false,
             settingsState = SettingsState(
@@ -301,6 +317,59 @@ class NaviLivePreferencesStore(
         )
     }
 
+
+    private fun encodeCustomFavoritePlaces(places: List<Place>): String {
+        val array = JSONArray()
+        places.forEach { place ->
+            val item = JSONObject()
+            item.put("id", place.id)
+            item.put("name", place.name)
+            item.put("address", place.address)
+            item.put("walkDistanceMeters", place.walkDistanceMeters)
+            item.put("walkEtaMinutes", place.walkEtaMinutes)
+            place.point?.let { point ->
+                item.put("latitude", point.latitude)
+                item.put("longitude", point.longitude)
+            }
+            place.phone?.takeIf { it.isNotBlank() }?.let { item.put("phone", it) }
+            place.website?.takeIf { it.isNotBlank() }?.let { item.put("website", it) }
+            array.put(item)
+        }
+        return array.toString()
+    }
+
+    private fun decodeCustomFavoritePlaces(json: String?): List<Place> {
+        if (json.isNullOrBlank()) return emptyList()
+        return runCatching {
+            val array = JSONArray(json)
+            val places = mutableListOf<Place>()
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: continue
+                val id = item.optString("id").takeIf { it.isNotBlank() } ?: continue
+                val name = item.optString("name").takeIf { it.isNotBlank() } ?: continue
+                val hasPoint = item.has("latitude") && item.has("longitude")
+                val point = if (hasPoint) {
+                    GeoPoint(
+                        latitude = item.optDouble("latitude"),
+                        longitude = item.optDouble("longitude"),
+                    )
+                } else {
+                    null
+                }
+                places += Place(
+                    id = id,
+                    name = name,
+                    address = item.optString("address"),
+                    walkDistanceMeters = item.optInt("walkDistanceMeters", 0),
+                    walkEtaMinutes = item.optInt("walkEtaMinutes", 0),
+                    point = point,
+                    phone = item.optString("phone").takeIf { it.isNotBlank() },
+                    website = item.optString("website").takeIf { it.isNotBlank() },
+                )
+            }
+            places
+        }.getOrDefault(emptyList())
+    }
     private fun systemDefaultSpeechRatePercent(): Int {
         return runCatching {
             Settings.Secure.getInt(context.contentResolver, "tts_default_rate")
@@ -309,6 +378,7 @@ class NaviLivePreferencesStore(
 
     private object Keys {
         val FavoriteIds = stringSetPreferencesKey("favorite_ids")
+        val CustomFavoritePlacesJson = stringPreferencesKey("custom_favorite_places_json")
         val LastRoutePlaceId = stringPreferencesKey("last_route_place_id")
         val HasCompletedOnboarding = booleanPreferencesKey("has_completed_onboarding")
         val Language = stringPreferencesKey("language")

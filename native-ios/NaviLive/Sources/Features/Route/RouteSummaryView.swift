@@ -54,7 +54,7 @@ struct RouteSummaryView: View {
 
             if !summary.steps.isEmpty {
               Section {
-                ForEach(summary.steps.prefix(8)) { step in
+                ForEach(summary.steps) { step in
                   VStack(alignment: .leading, spacing: 4) {
                     Text(step.instruction)
                     Text(AppFormatters.distance(step.distanceMeters))

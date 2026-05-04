@@ -1,87 +1,81 @@
 POLSKI
 
-Sprawdz wyszukiwanie celu i wyniki w poblizu.
-Najwazniejsze: Lidl, Biedronka, Zabka, sklep, paczkomat i stacja kolejowa maja najpierw pokazywac realnie bliskie miejsca. Wyniki maja byc sortowane praktycznie wedlug bliskosci i trafnosci, bez dalekich pozycji wypychajacych lokalne miejsca.
+Sprawdź wyszukiwanie celu i wyniki w pobliżu.
+Popularne zapytania, np. sklep, apteka, paczkomat, restauracja lub przystanek, powinny najpierw pokazywać realnie bliskie miejsca. Wyniki mają być sortowane według bliskości i trafności, bez dalekich pozycji wypychających lokalne punkty.
 
-Sprawdz adresy w wynikach wyszukiwania.
-Najwazniejsze: przy kazdym wyniku powinna byc nazwa oraz adres z numerem ulicy lub lokalu, np. Zabka Wschodnia 55 albo Zabka Wschodnia 36 lok. U3. Przy kilku sklepach tej samej sieci na jednej ulicy uzytkownik ma wiedziec, ktory wynik wybiera.
+Sprawdź adresy w wynikach wyszukiwania.
+Przy każdym wyniku powinna być nazwa oraz możliwie pełny adres z numerem ulicy lub lokalu. Jeśli w okolicy jest kilka punktów tej samej sieci, użytkownik powinien wiedzieć, który wynik wybiera.
 
-Sprawdz wyszukiwanie Zabki przy lokalizacji Wlokiennicza 4 w Lodzi.
-Najwazniejsze: aplikacja powinna korzystac z najblizszych wynikow, w tym oficjalnych danych lokalizatora Zabka, i pokazywac pobliskie sklepy z numerami adresow. Nie powinno byc samych adresow typu Wschodnia bez numeru.
+Sprawdź ustawienia Wyszukiwanie lokalne.
+Domyślna liczba wyników to 10, a użytkownik może zmienić zakres 3-30. Zmiana powinna zapisywać się po zamknięciu aplikacji, a regulator ma być dostępny dla VoiceOvera.
 
-Sprawdz ustawienia Wyszukiwanie lokalne.
-Najwazniejsze: domyslna liczba wynikow wyszukiwania to 10, a uzytkownik moze zmienic liczbe wynikow w zakresie 3-30. Sprawdz, czy zmiana zapisuje sie po zamknieciu aplikacji i czy VoiceOver poprawnie obsluguje regulator.
+Sprawdź ekran wyszukiwania z VoiceOverem.
+Pole Wpisz adres / miejsce, przycisk Szukaj i klawisz Szukaj/Enter mają uruchamiać wyszukiwanie bez gubienia fokusu. Wyniki powinny być czytelne podczas przechodzenia flickami.
 
-Sprawdz ekran wyszukiwania z VoiceOverem.
-Najwazniejsze: pole Wpisz adres / miejsce, przycisk Szukaj i klawisz Szukaj/Enter maja uruchamiac wyszukiwanie bez gubienia fokusu. Wyniki maja byc czytelne podczas przechodzenia flickami.
+Sprawdź ekran główny na iPhonie.
+Ustawienia mają być widoczne w prawym dolnym rogu bez przewijania. Navi Live ma być czytane jako pierwszy element, a bieżąca lokalizacja ma pokazywać przybliżoną dokładność.
 
-Sprawdz ekran glowny na iPhonie.
-Najwazniejsze: Ustawienia maja byc widoczne w prawym dolnym rogu bez przewijania, Navi Live ma byc czytane jako pierwszy element, a biezaca lokalizacja ma pokazywac przyblizona dokladnosc.
+Sprawdź globalny dostęp do Ustawień.
+Ustawienia powinny być dostępne z każdego głównego ekranu aplikacji, także podczas aktywnego prowadzenia, zawsze w tym samym miejscu: w prawym dolnym rogu. Po wyjściu z Ustawień użytkownik powinien wrócić do poprzedniego ekranu lub trwającej nawigacji.
 
-Sprawdz prowadzenie po trasie z wlaczonymi komunikatami glosowymi.
-Najwazniejsze: komunikaty maja pojawiac sie same podczas ruchu, odliczanie ma informowac przed manewrem, a przy manewrze ma byc komunikat z nazwa ulicy i kierunkiem, np. teraz skrec w Wschodnia w prawo albo skrec w Pomorska w lewo. Nie powinien pojawiac sie tekst kolejnym odcinku zamiast nazwy ulicy.
+Sprawdź prowadzenie po krótkiej pieszej trasie w znanej okolicy.
+Komunikaty mają pojawiać się same podczas ruchu. Odliczanie powinno informować przed manewrem, a przy manewrze ma pojawić się nazwa ulicy i kierunek. Aplikacja nie powinna mówić „kolejny odcinek” zamiast nazwy ulicy, gdy nazwa jest dostępna.
 
-Sprawdz trase Wlokiennicza 4 -> Plac Wolnosci w Lodzi.
-Najwazniejsze: kroki powinny przechodzic kolejno przez Wlokiennicza, Wschodnia, Pomorska i Plac Wolnosci, nie zatrzymywac sie na jednym kroku po minieciu manewru, a na koncu powinno pojawic sie dotarcie do celu.
+Sprawdź podgląd i aktywną nawigację dla trasy z kilkoma skrętami.
+Podgląd trasy powinien pokazywać wszystkie kroki. Kroki powinny przechodzić dalej po minięciu manewru, a na końcu powinno pojawić się dotarcie do celu.
 
-Sprawdz alerty przejsc dla pieszych.
-Najwazniejsze: przejscia dla pieszych na trasie maja byc zapowiadane jako ostrozne ostrzezenie, bez komunikatu przejdz na druga strone ulicy. Sprawdz tez sytuacje, gdy idziesz dalej ta sama ulica, a na skrzyzowaniu jest przejscie dla pieszych; alert powinien sie pojawic, jesli przejscie lezy na trasie.
+Sprawdź alerty przejść dla pieszych.
+Przejścia dla pieszych na trasie mają być zapowiadane jako ostrożne ostrzeżenie, bez automatycznego sugerowania przejścia na drugą stronę ulicy. Alert powinien pojawiać się tylko wtedy, gdy przejście leży na trasie.
 
-Sprawdz ustawienia Prowadzenie.
-Najwazniejsze: mozna wlaczyc/wylaczyc alerty przejsc dla pieszych, zmienic sposob odliczania komunikatow, sile potrzasniecia i zachowanie informacji haptycznej.
+Sprawdź zapisywanie bieżącej pozycji do ulubionych.
+Aplikacja ma poprosić o własną nazwę punktu, zapisać punkt pod tą nazwą i potwierdzić zapis komunikatem. Punkt powinien zostać w ulubionych po ponownym uruchomieniu aplikacji.
 
-Sprawdz ustawienia Mowa.
-Najwazniejsze: domyslnym zrodlem jest VoiceOver, druga opcja to Syntezator mowy, nie ma trybu Automatyczny. Lista glosow syntezatora ma otwierac osobny ekran z wyszukiwarka, a Podglad mowy ma byc ostatni.
+Sprawdź ustawienia Prowadzenie, Mowa i Dźwięki.
+Do sprawdzenia: alerty przejść, sposób odliczania komunikatów, siła potrząśnięcia, haptyka, źródło mowy bez trybu Automatyczny, lista głosów na osobnym ekranie, Podgląd mowy na końcu, osobna kategoria Dźwięki, głośność, podgląd, dźwięk przejścia i schematy Standard, Tetris oraz Cosmic.
 
-Sprawdz ustawienia Dzwieki.
-Najwazniejsze: dzwieki sa w osobnej kategorii, maja regulacje glosnosci, podglad, osobny dzwiek przejscia dla pieszych oraz schematy Standard, Tetris i Cosmic.
+Sprawdź szybkie akcje i rotory VoiceOver podczas nawigacji.
+Do sprawdzenia: rotor Wskazówki trasy, rotor Alerty oraz akcje: powtórz, poprzednia/następna wskazówka, pauza/wznów, przelicz, pokaż podsumowanie i zatrzymaj.
 
-Sprawdz szybkie akcje i rotory VoiceOver na ekranie aktywnej nawigacji.
-Najwazniejsze: rotor Wskazowki trasy, rotor Alerty oraz Czynnosci: powtorz, poprzednia/nastepna wskazowka, pauza/wznow, przelicz, pokaz podsumowanie i zatrzymaj.
-
-Sprawdz ulubione i ustawienia po aktualizacji.
-Najwazniejsze: zapisane ulubione, wybrany glos oraz ustawienia dzwiekow, mowy, wyszukiwania i prowadzenia powinny zostac po zwyklej aktualizacji.
+Sprawdź zachowanie po aktualizacji.
+Ulubione, wybrany głos oraz ustawienia dźwięków, mowy, wyszukiwania i prowadzenia powinny zostać po zwykłej aktualizacji.
 
 ENGLISH
 
 Test destination search and nearby results.
-Focus on Lidl, Biedronka, Zabka, shop, parcel locker and railway station queries returning truly nearby places first. Results should be sorted practically by proximity and relevance, without distant matches pushing out local places.
+Common queries such as shop, pharmacy, parcel locker, restaurant or public transport stop should return truly nearby places first. Results should be sorted by proximity and relevance, without distant matches pushing out local places.
 
 Test addresses in search results.
-Focus on every result showing a name and an address with a street number or unit, for example Zabka Wschodnia 55 or Zabka Wschodnia 36 lok. U3. When several stores from the same chain are on one street, the user should know which result they are choosing.
-
-Test Zabka search near Wlokiennicza 4 in Lodz.
-Focus on the app using nearby results, including official Zabka locator data, and showing nearby stores with numbered addresses. It should not show bare street-only addresses such as Wschodnia without a number.
+Each result should show a name and the most complete available address, including a street number or unit when available. If several places from the same chain are nearby, the user should know which result they are choosing.
 
 Test Local Search settings.
-Focus on the default search result count being 10 and the user being able to change the count from 3 to 30. Verify that the setting persists after closing the app and that VoiceOver handles the adjustable control correctly.
+The default result count is 10 and the user can choose 3-30 results. The setting should persist after closing the app and the adjustable control should work well with VoiceOver.
 
 Test the search screen with VoiceOver.
-Focus on the Enter address / place field, the Search button and the keyboard Search/Enter action starting search without losing focus. Results should be readable when moving through them with flick gestures.
+The Enter address / place field, Search button and keyboard Search/Enter action should start search without losing focus. Results should be readable when moving through them with flick gestures.
 
 Test the iPhone Home screen.
-Focus on Settings staying visible in the bottom-right corner without scrolling, Navi Live being read first, and current location showing approximate accuracy.
+Settings should stay visible in the bottom-right corner without scrolling. Navi Live should be read first and current location should show approximate accuracy.
 
-Test active route guidance with spoken prompts enabled.
-Focus on prompts starting automatically while moving, countdown prompts before maneuvers, and final maneuver prompts using the street name and direction, for example turn right onto Wschodnia or turn left onto Pomorska. The app should not say the next segment instead of a street name.
+Test global access to Settings.
+Settings should be available from every main app screen, including active guidance, always in the same place: the bottom-right corner. After leaving Settings, the user should return to the previous screen or ongoing navigation.
 
-Test the route Wlokiennicza 4 -> Plac Wolnosci in Lodz.
-Focus on route steps advancing through Wlokiennicza, Wschodnia, Pomorska and Plac Wolnosci, not getting stuck on one step after passing a maneuver, and showing arrival at the end.
+Test guidance on a short walking route in an area you know.
+Prompts should start automatically while moving. Countdown prompts should appear before maneuvers, and final maneuver prompts should use the street name and direction. The app should not say a vague next segment when a street name is available.
+
+Test route preview and active guidance for a route with several turns.
+The route preview should show all steps. Steps should advance after passing maneuvers and arrival should be shown at the end.
 
 Test pedestrian crossing alerts.
-Focus on pedestrian crossings on the route being announced as a caution alert, without telling the user to cross to the other side of the street. Also test continuing along the same street when a crossing is at an intersection; the alert should still appear if the crossing is on the route.
+Crossings on the route should be announced as caution warnings, without automatically telling the user to cross to the other side of the street. The alert should appear only when the crossing lies on the route.
 
-Test Guidance settings.
-Focus on pedestrian crossing alerts, announcement cadence, shake gesture strength and haptic feedback behavior.
+Test saving the current position to favorites.
+The app should ask for a custom point name, save the point with that name and confirm the save. The point should remain in favorites after relaunching the app.
 
-Test Speech settings.
-Focus on VoiceOver as the default source, Speech synthesizer as the second source, no Automatic mode, and the synthesizer voice list opening as a separate searchable screen. Speech preview should be last.
+Test Guidance, Speech and Sounds settings.
+Check crossing alerts, prompt countdown mode, shake strength, haptics, speech source without Automatic mode, the separate searchable voice list, Speech Preview being last, the separate Sounds category, volume, preview, crossing sound and Standard, Tetris and Cosmic schemes.
 
-Test Sounds settings.
-Focus on sounds being in their own category with volume, preview, a separate pedestrian crossing cue, and Standard, Tetris and Cosmic schemes.
+Test VoiceOver quick actions and rotors during navigation.
+Check the Route Instructions rotor, Alerts rotor and actions: repeat, previous/next instruction, pause/resume, recalculate, show summary and stop.
 
-Test VoiceOver actions and rotors on the active navigation screen.
-Focus on Route instructions and Alerts rotors, plus Actions for repeat, previous/next instruction, pause/resume, recalculate, show summary and stop.
-
-Test favorites and settings after updating.
-Focus on saved favorites, selected voice, sound, speech, search and guidance settings remaining after a normal app update.
+Test behavior after update.
+Favorites, selected voice and sound, speech, search and guidance settings should be preserved after a normal update.

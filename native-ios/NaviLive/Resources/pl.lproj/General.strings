@@ -1,6 +1,7 @@
 "common.ok" = "OK";
 "common.settings" = "Ustawienia";
 "common.cancel" = "Anuluj";
+"common.save" = "Zapisz";
 "common.back" = "Wróć";
 "common.continue" = "Dalej";
 "formatter.minute.one" = "1 min";

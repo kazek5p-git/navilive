@@ -61,6 +61,11 @@
 "current.position.saved_status" = "Current position saved.";
 "current.position.already_saved" = "Current position is already saved.";
 "current.position.save_unavailable" = "Current position is not available yet.";
+"current.save.dialog.title" = "Name this point";
+"current.save.dialog.name" = "Point name";
+"current.position.name_required" = "Enter a name for this point.";
+"current.position.saved_named" = "%@ saved to favorites.";
+"current.position.already_saved_named" = "%@ is already saved in favorites.";
 "favorites.title" = "Favorites";
 "favorites.empty" = "You do not have any saved favorites yet.";
 "favorites.open_hint" = "Opens place details.";

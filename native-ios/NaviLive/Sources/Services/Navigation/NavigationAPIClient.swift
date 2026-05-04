@@ -1,4 +1,4 @@
-﻿import Foundation
+import Foundation
 
 enum NavigationAPIError: LocalizedError {
   case invalidURL
@@ -211,7 +211,7 @@ actor NavigationAPIClient {
   private let nearbyAddressLookupRadiusMeters = 80
   private let nearbyAddressLookupLimit = 220
   private let routeRequestTimeout: TimeInterval = 10
-  private let routeRoadNameRequestTimeout: TimeInterval = 5
+  private let routeRoadNameRequestTimeout: TimeInterval = 8
   private let crossingRequestTimeout: TimeInterval = 2
   private let crossingDuplicateProximityMeters = 3.0
   private let crossingTurnProximityMeters = 8.0
@@ -452,18 +452,23 @@ actor NavigationAPIClient {
         maneuverPoint: maneuverPoint,
         namedRouteWays: namedRouteWays
       )
+      let explicitRoadName = step.name.trimmingCharacters(in: .whitespacesAndNewlines)
+      let roadName = explicitRoadName.isEmpty ? inferredRoadName : explicitRoadName
       return RouteStep(
-        instruction: humanInstruction(for: step, inferredRoadName: inferredRoadName),
+        instruction: humanInstruction(for: step, inferredRoadName: roadName),
         distanceMeters: Int(step.distance.rounded()),
         maneuverPoint: maneuverPoint,
         maneuverType: step.maneuver.type,
-        maneuverModifier: step.maneuver.modifier
+        maneuverModifier: step.maneuver.modifier,
+        roadName: roadName
       )
     }
 
+    let simplifiedSteps = simplifyRouteSteps(baseSteps)
+
     let steps = includePedestrianCrossings
-      ? await routeStepsAddingPedestrianCrossings(steps: baseSteps, pathPoints: points)
-      : baseSteps
+      ? await routeStepsAddingPedestrianCrossings(steps: simplifiedSteps, pathPoints: points)
+      : simplifiedSteps
 
     return RouteSummary(
       distanceMeters: Int(route.distance.rounded()),
@@ -538,7 +543,8 @@ actor NavigationAPIClient {
       "way[\"highway\"][\"name\"]\(bbox);out geom;"
     return [
       "https://overpass-api.de/api/interpreter",
-      "https://overpass.kumi.systems/api/interpreter"
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.osm.ch/api/interpreter"
     ].compactMap { rawURL in
       guard var components = URLComponents(string: rawURL) else { return nil }
       components.queryItems = [.init(name: "data", value: query)]
@@ -600,8 +606,8 @@ actor NavigationAPIClient {
     if stepGeometry.count >= 3 {
       return [stepGeometry[stepGeometry.count / 2], stepGeometry[stepGeometry.count - 1]]
     }
-    if let maneuverPoint { return [maneuverPoint] }
-    return stepGeometry
+    if let last = stepGeometry.last { return [last] }
+    return maneuverPoint.map { [$0] } ?? []
   }
 
   private func routeWayDistanceMeters(way: NamedRouteWay, point: GeoPoint) -> Double {
@@ -648,6 +654,9 @@ actor NavigationAPIClient {
     default:
       switch descriptor.strategy {
       case .departNamed:
+        if let roadName = descriptor.roadName, !roadName.isEmpty {
+          return L10n.text("navigation.step.depart.named", table: .navigation, roadName)
+        }
         return L10n.text("navigation.step.depart", table: .navigation)
       case .arrive:
         return L10n.text("navigation.step.arrive", table: .navigation)
@@ -680,6 +689,50 @@ actor NavigationAPIClient {
         return L10n.text("navigation.step.continue", table: .navigation)
       }
     }
+  }
+
+  private func simplifyRouteSteps(_ steps: [RouteStep]) -> [RouteStep] {
+    guard steps.count > 2 else { return steps }
+    var simplified: [RouteStep] = []
+    for (index, step) in steps.enumerated() {
+      let previous = simplified.last
+      if shouldSuppressRouteStep(step, previous: previous, index: index, lastIndex: steps.count - 1) {
+        guard var mergedPrevious = simplified.popLast() else { continue }
+        mergedPrevious.distanceMeters += step.distanceMeters
+        simplified.append(mergedPrevious)
+      } else {
+        simplified.append(step)
+      }
+    }
+    return simplified.isEmpty ? steps : simplified
+  }
+
+  private func shouldSuppressRouteStep(
+    _ step: RouteStep,
+    previous: RouteStep?,
+    index: Int,
+    lastIndex: Int
+  ) -> Bool {
+    guard let previous else { return false }
+    guard index > 0, index < lastIndex else { return false }
+    guard step.kind == .instruction, previous.kind == .instruction else { return false }
+    if step.maneuverType?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "arrive" {
+      return false
+    }
+    guard let currentRoad = normalizedRouteRoadName(step.roadName),
+          let previousRoad = normalizedRouteRoadName(previous.roadName),
+          currentRoad == previousRoad else {
+      return false
+    }
+    return step.isTurnLikeManeuver || step.distanceMeters <= 35
+  }
+
+  private func normalizedRouteRoadName(_ value: String?) -> String? {
+    let normalized = value?
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+      .lowercased()
+      .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+    return normalized?.isEmpty == false ? normalized : nil
   }
 
   private func routeStepsAddingPedestrianCrossings(
@@ -819,7 +872,8 @@ actor NavigationAPIClient {
       ");out center 160;"
     return [
       "https://overpass-api.de/api/interpreter",
-      "https://overpass.kumi.systems/api/interpreter"
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.osm.ch/api/interpreter"
     ].compactMap { rawURL in
       guard var components = URLComponents(string: rawURL) else { return nil }
       components.queryItems = [.init(name: "data", value: query)]
@@ -1218,7 +1272,8 @@ actor NavigationAPIClient {
       let query = buildPOICacheRefreshQuery(selectors: selectors)
       return [
         "https://overpass-api.de/api/interpreter",
-        "https://overpass.kumi.systems/api/interpreter"
+        "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.osm.ch/api/interpreter"
       ].compactMap { rawURL in
         guard var components = URLComponents(string: rawURL) else { return nil }
         components.queryItems = [.init(name: "data", value: query)]
@@ -1484,7 +1539,8 @@ actor NavigationAPIClient {
       let overpassQuery = buildOverpassQuery(selectors: selectors)
       let endpoints = [
         "https://overpass-api.de/api/interpreter",
-        "https://overpass.kumi.systems/api/interpreter"
+        "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.osm.ch/api/interpreter"
       ]
       return endpoints.compactMap { rawURL in
         guard var components = URLComponents(string: rawURL) else { return nil }

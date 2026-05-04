@@ -47,6 +47,7 @@ struct RouteStep: Identifiable, Codable, Hashable, Sendable {
   var kind: RouteStepKind = .instruction
   var maneuverType: String?
   var maneuverModifier: String?
+  var roadName: String?
 
   init(
     id: UUID = UUID(),
@@ -55,7 +56,8 @@ struct RouteStep: Identifiable, Codable, Hashable, Sendable {
     maneuverPoint: GeoPoint? = nil,
     kind: RouteStepKind = .instruction,
     maneuverType: String? = nil,
-    maneuverModifier: String? = nil
+    maneuverModifier: String? = nil,
+    roadName: String? = nil
   ) {
     self.id = id
     self.instruction = instruction
@@ -64,6 +66,7 @@ struct RouteStep: Identifiable, Codable, Hashable, Sendable {
     self.kind = kind
     self.maneuverType = maneuverType
     self.maneuverModifier = maneuverModifier
+    self.roadName = roadName
   }
 
   private enum CodingKeys: String, CodingKey {
@@ -74,6 +77,7 @@ struct RouteStep: Identifiable, Codable, Hashable, Sendable {
     case kind
     case maneuverType
     case maneuverModifier
+    case roadName
   }
 
   init(from decoder: Decoder) throws {
@@ -85,6 +89,7 @@ struct RouteStep: Identifiable, Codable, Hashable, Sendable {
     kind = try container.decodeIfPresent(RouteStepKind.self, forKey: .kind) ?? .instruction
     maneuverType = try container.decodeIfPresent(String.self, forKey: .maneuverType)
     maneuverModifier = try container.decodeIfPresent(String.self, forKey: .maneuverModifier)
+    roadName = try container.decodeIfPresent(String.self, forKey: .roadName)
   }
 }
 

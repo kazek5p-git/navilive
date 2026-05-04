@@ -1,4 +1,5 @@
 "navigation.step.depart" = "Rozpocznij marsz";
+"navigation.step.depart.named" = "Ruszaj. Dalej: %1$@";
 "navigation.step.arrive" = "Dotarłeś do celu";
 "navigation.step.turn.left" = "Skręć w lewo";
 "navigation.step.turn.right" = "Skręć w prawo";
@@ -8,11 +9,11 @@
 "navigation.step.turn.sharp right" = "Skręć ostro w prawo";
 "navigation.step.turn.straight" = "Idź prosto";
 "navigation.step.turn.default" = "Kontynuuj trasę";
-"navigation.step.turn.named" = "Skręć %2$@ w %1$@";
-"navigation.step.turn.generic.named" = "Skręć w %1$@";
+"navigation.step.turn.named" = "Skręć %2$@. Dalej: %1$@";
+"navigation.step.turn.generic.named" = "Skręć. Dalej: %1$@";
 "navigation.step.roundabout" = "Wejdź na rondo";
 "navigation.step.continue" = "Kontynuuj";
-"navigation.step.continue.named" = "Kontynuuj %1$@";
+"navigation.step.continue.named" = "Idź dalej: %1$@";
 "navigation.step.crossing" = "Przejście dla pieszych na trasie. Zachowaj ostrożność.";
 "navigation.modifier.left" = "w lewo";
 "navigation.modifier.right" = "w prawo";
@@ -101,7 +102,7 @@
 "active.status.no_previous_instruction" = "To pierwsza wskazówka.";
 "active.status.no_next_instruction" = "To ostatnia wskazówka.";
 "active.spoken.off_route" = "Jesteś poza trasą.";
-"active.spoken.now" = "Teraz %1$@";
+"active.spoken.now" = "Teraz: %1$@";
 "active.spoken.previous_instruction" = "Poprzednia wskazówka: %@";
 "active.spoken.next_instruction" = "Następna wskazówka: %@";
 "active.spoken.upcoming.distance" = "Za %1$d metrów: %2$@";

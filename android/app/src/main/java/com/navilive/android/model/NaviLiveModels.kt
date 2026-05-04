@@ -38,6 +38,7 @@ data class RouteStep(
     val kind: RouteStepKind = RouteStepKind.Instruction,
     val maneuverType: String? = null,
     val maneuverModifier: String? = null,
+    val roadName: String? = null,
 )
 
 data class HeadingState(

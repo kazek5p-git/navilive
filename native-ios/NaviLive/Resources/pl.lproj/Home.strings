@@ -61,6 +61,11 @@
 "current.position.saved_status" = "Zapisano bieżącą pozycję.";
 "current.position.already_saved" = "Bieżąca pozycja jest już zapisana.";
 "current.position.save_unavailable" = "Bieżąca pozycja nie jest jeszcze dostępna.";
+"current.save.dialog.title" = "Podaj nazwę punktu";
+"current.save.dialog.name" = "Nazwa punktu";
+"current.position.name_required" = "Podaj nazwę tego punktu.";
+"current.position.saved_named" = "Zapisano %@ w ulubionych.";
+"current.position.already_saved_named" = "%@ jest już zapisany w ulubionych.";
 "favorites.title" = "Ulubione";
 "favorites.empty" = "Nie masz jeszcze zapisanych ulubionych.";
 "favorites.open_hint" = "Otwiera szczegóły miejsca.";

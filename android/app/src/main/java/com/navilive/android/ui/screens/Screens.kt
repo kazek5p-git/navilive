@@ -55,6 +55,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.SurroundSound
 import androidx.compose.material.icons.filled.Stop
 import com.navilive.android.guidance.NavigationSoundCue
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -64,6 +65,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -84,6 +86,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -163,16 +166,20 @@ private val OnSuccessContainer = Color(0xFF14311A)
 private const val SupportBaseUrl = "https://paypal.me/KazimierzParzych"
 private val SupportQuickAmounts = listOf(5, 10, 20, 50)
 
+val LocalOpenSettings = staticCompositionLocalOf<(() -> Unit)?> { null }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenScaffold(
     title: String,
     showBack: Boolean,
     showTitle: Boolean = true,
+    showSettingsAction: Boolean = true,
     onBack: (() -> Unit)? = null,
     actions: @Composable (() -> Unit)? = null,
     content: @Composable (Modifier) -> Unit,
 ) {
+    val openSettings = LocalOpenSettings.current
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -209,8 +216,27 @@ private fun ScreenScaffold(
                 content(
                     Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(
+                            start = 16.dp,
+                            top = 12.dp,
+                            end = 16.dp,
+                            bottom = if (showSettingsAction && openSettings != null) 96.dp else 12.dp,
+                        ),
                 )
+                if (showSettingsAction && openSettings != null) {
+                    FloatingActionButton(
+                        onClick = openSettings,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(16.dp)
+                            .semantics { traversalIndex = 1f },
+                    ) {
+                        Icon(
+                            Icons.Filled.Settings,
+                            contentDescription = stringResource(R.string.action_settings),
+                        )
+                    }
+                }
             }
         }
     }
@@ -230,7 +256,6 @@ fun StartScreen(
     onFavorites: () -> Unit,
     onResumeLastRoute: (String) -> Unit,
     onOpenQuickFavorite: (String) -> Unit,
-    onSettings: () -> Unit,
     onGrantLocationPermission: () -> Unit,
     onToggleTracking: () -> Unit,
 ) {
@@ -346,19 +371,18 @@ fun StartScreen(
                 }
             }
 
-            SecondaryActionButton(
-                label = stringResource(R.string.action_settings),
-                icon = Icons.Filled.Settings,
-                onClick = onSettings,
-                modifier = Modifier.align(Alignment.End),
-            )
+
         }
     }
 }
 
 @Composable
 fun BootstrapScreen() {
-    ScreenScaffold(title = stringResource(R.string.app_name), showBack = false) { modifier ->
+    ScreenScaffold(
+        title = stringResource(R.string.app_name),
+        showBack = false,
+        showSettingsAction = false,
+    ) { modifier ->
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -728,7 +752,7 @@ fun RouteSummaryScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     SectionHeading(stringResource(R.string.route_summary_guidance_preview))
-                    summary.steps.take(8).forEachIndexed { index, step ->
+                    summary.steps.forEachIndexed { index, step ->
                         Text(
                             text = stringResource(
                                 R.string.format_step_preview_with_distance,
@@ -982,11 +1006,53 @@ fun CurrentPositionScreen(
     hasLocationPermission: Boolean,
     quickFavorites: List<Place>,
     onReadLocation: () -> Unit,
+    onSaveCurrentLocationAsFavorite: (String) -> Unit,
     onSearch: () -> Unit,
     onPickFavorite: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     val status = currentPositionStatus(hasLocationPermission, accuracyMeters)
+    var showSaveDialog by remember { mutableStateOf(false) }
+    var customFavoriteName by remember { mutableStateOf("") }
+    val trimmedFavoriteName = customFavoriteName.trim()
+
+    if (showSaveDialog) {
+        AlertDialog(
+            onDismissRequest = { showSaveDialog = false },
+            title = { Text(stringResource(R.string.current_position_save_dialog_title)) },
+            text = {
+                OutlinedTextField(
+                    value = customFavoriteName,
+                    onValueChange = { customFavoriteName = it },
+                    label = { Text(stringResource(R.string.current_position_save_dialog_name_label)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = trimmedFavoriteName.isNotBlank(),
+                    onClick = {
+                        onSaveCurrentLocationAsFavorite(trimmedFavoriteName)
+                        customFavoriteName = ""
+                        showSaveDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.common_save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        customFavoriteName = ""
+                        showSaveDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            },
+        )
+    }
 
     ScreenScaffold(title = stringResource(R.string.current_position_title), showBack = true, onBack = onBack) { modifier ->
         Column(
@@ -1014,8 +1080,14 @@ fun CurrentPositionScreen(
 
             PrimaryActionButton(
                 label = stringResource(R.string.current_position_read_aloud),
-                    icon = Icons.AutoMirrored.Filled.VolumeUp,
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
                 onClick = onReadLocation,
+            )
+
+            SecondaryActionButton(
+                label = stringResource(R.string.current_position_save_current),
+                icon = Icons.Filled.BookmarkAdd,
+                onClick = { showSaveDialog = true },
             )
 
             SecondaryActionButton(
@@ -1065,7 +1137,6 @@ fun CurrentPositionScreen(
         }
     }
 }
-
 @Composable
 private fun AccessibleSearchTextField(
     value: String,
@@ -1282,6 +1353,7 @@ fun SettingsScreen(
     ScreenScaffold(
         title = title,
         showBack = true,
+        showSettingsAction = false,
         onBack = {
             if (destination == SettingsDestination.Root) {
                 onBack()

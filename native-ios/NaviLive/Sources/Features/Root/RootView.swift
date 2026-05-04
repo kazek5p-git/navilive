@@ -84,6 +84,24 @@ private struct RootNavigationView: View {
           }
         }
     }
+    .safeAreaInset(edge: .bottom, alignment: .trailing) {
+      if model.path.last != .settings {
+        HStack {
+          Spacer()
+          SecondaryActionButton(
+            title: L10n.text("home.action.settings", table: .home),
+            systemImage: "gearshape"
+          ) {
+            model.openSettings()
+          }
+          .frame(maxWidth: 260)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+        .background(.regularMaterial)
+      }
+    }
   }
 }
 

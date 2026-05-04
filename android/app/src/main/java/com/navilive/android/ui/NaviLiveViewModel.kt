@@ -73,6 +73,7 @@ private data class SegmentProjection(
 private const val NearbyPoiCacheFreshMs = 24L * 60L * 60L * 1_000L
 private const val NearbyPoiCacheMoveThresholdMeters = 800.0
 private const val NearbyPoiCacheAttemptThrottleMs = 2L * 60L * 1_000L
+private const val CustomFavoritePlaceIdPrefix = "custom-current-"
 
 class NaviLiveViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -164,18 +165,26 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
             preferencesStore.state.collect { persisted ->
                 val currentVersionLabel = currentAppVersionLabel()
                 val currentBuildLabel = currentAppBuildLabel()
-                val sanitizedFavoriteIds = persisted.favoriteIds - retiredDemoPlaceIds
+                val sanitizedCustomFavoritePlaces = persisted.customFavoritePlaces
+                    .filter { place ->
+                        place.id.startsWith(CustomFavoritePlaceIdPrefix) &&
+                            place.id !in retiredDemoPlaceIds
+                    }
+                val sanitizedFavoriteIds = (persisted.favoriteIds - retiredDemoPlaceIds) +
+                    sanitizedCustomFavoritePlaces.map { it.id }.toSet()
                 val sanitizedLastRoutePlaceId = persisted.lastRoutePlaceId?.takeUnless { it in retiredDemoPlaceIds }
                 val sanitizedDownloadedUpdate = sanitizePersistedDownloadedUpdate(
                     currentVersionLabel = currentVersionLabel,
                     apkPath = persisted.downloadedUpdateApkPath,
                     versionLabel = persisted.downloadedUpdateVersionLabel,
                 )
-                if (
-                    sanitizedFavoriteIds != persisted.favoriteIds ||
-                    sanitizedLastRoutePlaceId != persisted.lastRoutePlaceId
-                ) {
+                if (sanitizedFavoriteIds != persisted.favoriteIds) {
                     preferencesStore.setFavoriteIds(sanitizedFavoriteIds)
+                }
+                if (sanitizedCustomFavoritePlaces != persisted.customFavoritePlaces) {
+                    preferencesStore.setCustomFavoritePlaces(sanitizedCustomFavoritePlaces)
+                }
+                if (sanitizedLastRoutePlaceId != persisted.lastRoutePlaceId) {
                     preferencesStore.setLastRoutePlaceId(sanitizedLastRoutePlaceId)
                 }
                 if (
@@ -203,7 +212,13 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
                     }
                 }
                 _uiState.update { current ->
+                    val mergedPlaces = mergeById(
+                        mergeById(seedPlaces, current.places),
+                        sanitizedCustomFavoritePlaces,
+                    )
                     current.copy(
+                        places = mergedPlaces,
+                        searchResults = if (current.searchQuery.isBlank()) mergedPlaces else current.searchResults,
                         favoriteIds = sanitizedFavoriteIds,
                         lastRoutePlaceId = sanitizedLastRoutePlaceId,
                         settingsState = synchronizeSpeechSettings(persisted.settingsState),
@@ -590,19 +605,104 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun saveCurrentLocationAsFavorite(rawName: String) {
+        val name = rawName.trim()
+        if (name.isBlank()) {
+            val message = string(R.string.current_position_save_name_required)
+            _uiState.update { current -> current.copy(statusMessage = message) }
+            speakNow(message)
+            return
+        }
+        val fix = _uiState.value.locationState.latestFix
+        if (fix == null) {
+            val message = string(R.string.location_announcement_unavailable)
+            _uiState.update { current -> current.copy(statusMessage = message) }
+            speakNow(message)
+            return
+        }
+
+        val address = currentAddressForFavorite(fix)
+        var favoriteIds = emptySet<String>()
+        var customPlaces = emptyList<Place>()
+        var added = false
+        var savedPlaceId = ""
+        var message = ""
+        _uiState.update { current ->
+            val existing = current.places.firstOrNull { place ->
+                isSameSavedCurrentPosition(
+                    place = place,
+                    name = name,
+                    address = address,
+                    point = fix.point,
+                )
+            }
+            val place = existing ?: Place(
+                id = "$CustomFavoritePlaceIdPrefix${System.currentTimeMillis()}",
+                name = name,
+                address = address,
+                walkDistanceMeters = 0,
+                walkEtaMinutes = 0,
+                point = fix.point,
+            )
+            added = existing == null
+            savedPlaceId = place.id
+            val nextPlaces = if (added) mergeById(current.places, listOf(place)) else current.places
+            val nextFavoriteIds = current.favoriteIds + place.id
+            favoriteIds = nextFavoriteIds
+            customPlaces = customFavoritePlacesToPersist(nextPlaces, nextFavoriteIds)
+            message = if (added) {
+                string(R.string.format_current_position_saved_named, name)
+            } else {
+                string(R.string.format_current_position_already_saved_named, name)
+            }
+            current.copy(
+                places = nextPlaces,
+                searchResults = if (current.searchQuery.isBlank()) nextPlaces else current.searchResults,
+                favoriteIds = nextFavoriteIds,
+                statusMessage = message,
+            )
+        }
+        telemetryLogger.log(
+            type = "current_position_favorite_saved",
+            message = if (added) "Custom current-position favorite saved." else "Custom current-position favorite already existed.",
+            attributes = linkedMapOf("place_id" to savedPlaceId, "is_new" to added),
+        )
+        refreshDiagnosticsState()
+        speakNow(message)
+        viewModelScope.launch {
+            preferencesStore.setFavoriteIds(favoriteIds)
+            preferencesStore.setCustomFavoritePlaces(customPlaces)
+        }
+    }
+
     fun toggleFavorite(placeId: String) {
         var favoriteIds = emptySet<String>()
+        var customPlaces = emptyList<Place>()
         var added = false
         _uiState.update { current ->
             val next = current.favoriteIds.toMutableSet()
-            if (placeId in next) {
+            val wasFavorite = placeId in next
+            if (wasFavorite) {
                 next.remove(placeId)
             } else {
                 next.add(placeId)
                 added = true
             }
+            val nextPlaces = if (wasFavorite && placeId.startsWith(CustomFavoritePlaceIdPrefix)) {
+                current.places.filterNot { it.id == placeId }
+            } else {
+                current.places
+            }
+            val nextSearchResults = if (wasFavorite && placeId.startsWith(CustomFavoritePlaceIdPrefix)) {
+                current.searchResults.filterNot { it.id == placeId }
+            } else {
+                current.searchResults
+            }
             favoriteIds = next
+            customPlaces = customFavoritePlacesToPersist(nextPlaces, next)
             current.copy(
+                places = nextPlaces,
+                searchResults = nextSearchResults,
                 favoriteIds = next,
                 statusMessage = if (placeId in next) {
                     string(R.string.status_saved_to_favorites)
@@ -619,6 +719,7 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
         refreshDiagnosticsState()
         viewModelScope.launch {
             preferencesStore.setFavoriteIds(favoriteIds)
+            preferencesStore.setCustomFavoritePlaces(customPlaces)
         }
     }
 
@@ -2113,6 +2214,36 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
             activeSystemTtsEngineLabel = runtime.activeSystemTtsEngineLabel,
             isSelectedSystemTtsEngineAvailable = isSelectedEngineAvailable,
         )
+    }
+
+    private fun customFavoritePlacesToPersist(
+        places: List<Place>,
+        favoriteIds: Set<String>,
+    ): List<Place> {
+        return places.filter { place ->
+            place.id.startsWith(CustomFavoritePlaceIdPrefix) && place.id in favoriteIds
+        }
+    }
+
+    private fun isSameSavedCurrentPosition(
+        place: Place,
+        name: String,
+        address: String,
+        point: GeoPoint,
+    ): Boolean {
+        if (!place.id.startsWith(CustomFavoritePlaceIdPrefix)) return false
+        if (!place.name.equals(name, ignoreCase = true)) return false
+        val existingPoint = place.point
+        if (existingPoint != null && distanceMeters(existingPoint, point) <= 25.0) {
+            return true
+        }
+        return address.isNotBlank() && place.address == address
+    }
+
+    private fun currentAddressForFavorite(fix: LocationFix): String {
+        val label = _uiState.value.currentLocationLabel.trim()
+        val waitingLabel = string(R.string.current_position_status_waiting_message)
+        return label.takeIf { it.isNotBlank() && it != waitingLabel } ?: formatCoordinateLabel(fix)
     }
 
     private fun mergeById(existing: List<Place>, incoming: List<Place>): List<Place> {

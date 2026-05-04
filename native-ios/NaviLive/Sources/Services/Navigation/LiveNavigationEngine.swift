@@ -12,11 +12,24 @@ struct LiveNavigationUpdate {
   let hasArrived: Bool
 }
 
+private struct RouteProgressProjection {
+  let distanceAlongRouteMeters: Double
+  let remainingRouteMeters: Double
+  let lateralDistanceMeters: Double
+}
+
+private struct SegmentProjection {
+  let ratio: Double
+  let lengthMeters: Double
+  let lateralDistanceMeters: Double
+}
+
 final class LiveNavigationEngine {
   private struct RouteSession {
     let destination: Place
     let steps: [RouteStep]
     let pathPoints: [GeoPoint]
+    let stepDistancesAlongRoute: [Double]
     var currentStepIndex: Int
   }
 
@@ -35,15 +48,23 @@ final class LiveNavigationEngine {
               ? L10n.text("route.follow_default", table: .navigation)
               : summary.currentInstruction,
             distanceMeters: max(summary.distanceMeters, 1),
-            maneuverPoint: destination.point
+            maneuverPoint: destination.point,
+            roadName: destination.name
           )
         ]
       : summary.steps
 
+    let routeLength = routeLengthMeters(summary.pathPoints)
+    let stepDistances = stepDistancesAlongRoute(
+      steps: normalizedSteps,
+      pathPoints: summary.pathPoints,
+      routeLengthMeters: routeLength
+    )
     session = RouteSession(
       destination: destination,
       steps: normalizedSteps,
       pathPoints: summary.pathPoints,
+      stepDistancesAlongRoute: stepDistances,
       currentStepIndex: 0
     )
 
@@ -173,12 +194,19 @@ final class LiveNavigationEngine {
 
   private func resolveStepIndex(session: RouteSession, fix: LocationFix) -> Int {
     var index = session.currentStepIndex
+    let projectedProgress = routeProgressProjection(pathPoints: session.pathPoints, point: fix.point)
+    let advanceThreshold = NavigationScenarioCore.maneuverAdvanceThresholdMeters(
+      accuracyMeters: fix.accuracyMeters
+    )
     while index < session.steps.count - 1 {
       guard let nextManeuver = session.steps[index + 1].maneuverPoint else { break }
+      let nextDistanceAlongRoute = session.stepDistancesAlongRoute[safe: index + 1] ?? .greatestFiniteMagnitude
+      let hasPassedManeuver = projectedProgress != nil &&
+        projectedProgress!.distanceAlongRouteMeters >= nextDistanceAlongRoute - advanceThreshold
       if NavigationScenarioCore.shouldAdvanceStep(
         distanceToManeuverMeters: fix.point.distance(to: nextManeuver),
         accuracyMeters: fix.accuracyMeters
-      ) {
+      ) || hasPassedManeuver {
         index += 1
       } else {
         break
@@ -202,8 +230,13 @@ final class LiveNavigationEngine {
     let safeIndex = min(max(currentStepIndex, 0), session.steps.count - 1)
     let currentStep = session.steps[safeIndex]
     let nextStep = safeIndex < session.steps.count - 1 ? session.steps[safeIndex + 1] : nil
+    let routeProgress = fix.flatMap { routeProgressProjection(pathPoints: session.pathPoints, point: $0.point) }
 
     let distanceToNext: Int = {
+      if nextStep != nil, let routeProgress {
+        let nextDistance = session.stepDistancesAlongRoute[safe: safeIndex + 1] ?? routeProgress.distanceAlongRouteMeters
+        return max(Int((nextDistance - routeProgress.distanceAlongRouteMeters).rounded()), 0)
+      }
       if let maneuverPoint = nextStep?.maneuverPoint, let fix {
         return max(Int(fix.point.distance(to: maneuverPoint).rounded()), 1)
       }
@@ -211,7 +244,7 @@ final class LiveNavigationEngine {
         return nextStep.distanceMeters
       }
       if let destinationPoint = session.destination.point, let fix {
-        return max(Int(fix.point.distance(to: destinationPoint).rounded()), 1)
+        return max(Int(fix.point.distance(to: destinationPoint).rounded()), 0)
       }
       return max(currentStep.distanceMeters, 1)
     }()
@@ -229,7 +262,7 @@ final class LiveNavigationEngine {
       nextInstruction: nextStep?.instruction ?? L10n.text("active.destination_ahead", table: .navigation),
       currentStepIndex: safeIndex,
       distanceToNextMeters: distanceToNext,
-      remainingDistanceMeters: max(remainingFromSteps, remainingFromDestination),
+      remainingDistanceMeters: routeProgress.map { max(Int($0.remainingRouteMeters.rounded()), 0) } ?? max(remainingFromSteps, remainingFromDestination),
       progressLabel: L10n.text("active.progress", table: .navigation, safeIndex + 1, session.steps.count),
       isPaused: previous.isPaused,
       isOffRoute: isOffRoute,
@@ -240,19 +273,63 @@ final class LiveNavigationEngine {
 
   private func routeDeviationMeters(pathPoints: [GeoPoint], point: GeoPoint) -> Int? {
     guard pathPoints.count >= 3 else { return nil }
-    var minimumMeters = Double.greatestFiniteMagnitude
+    return routeProgressProjection(pathPoints: pathPoints, point: point)
+      .map { Int($0.lateralDistanceMeters.rounded()) }
+  }
+
+  private func routeLengthMeters(_ pathPoints: [GeoPoint]) -> Double {
+    guard pathPoints.count >= 2 else { return 0 }
+    var length = 0.0
     for index in 0..<(pathPoints.count - 1) {
-      let candidate = pointToSegmentDistanceMeters(
+      length += pathPoints[index].distance(to: pathPoints[index + 1])
+    }
+    return length
+  }
+
+  private func stepDistancesAlongRoute(
+    steps: [RouteStep],
+    pathPoints: [GeoPoint],
+    routeLengthMeters: Double
+  ) -> [Double] {
+    var distances: [Double] = []
+    var previous = 0.0
+    for (index, step) in steps.enumerated() {
+      let raw = step.maneuverPoint
+        .flatMap { routeProgressProjection(pathPoints: pathPoints, point: $0)?.distanceAlongRouteMeters } ??
+        (index == 0 ? 0 : routeLengthMeters)
+      let normalized = min(max(raw, previous), routeLengthMeters)
+      distances.append(normalized)
+      previous = normalized
+    }
+    return distances
+  }
+
+  private func routeProgressProjection(pathPoints: [GeoPoint], point: GeoPoint) -> RouteProgressProjection? {
+    guard pathPoints.count >= 2 else { return nil }
+    var bestProjection: RouteProgressProjection?
+    var distanceBeforeSegment = 0.0
+    let totalLength = routeLengthMeters(pathPoints)
+    for index in 0..<(pathPoints.count - 1) {
+      let segmentProjection = projectOntoSegment(
         point: point,
         start: pathPoints[index],
         end: pathPoints[index + 1]
       )
-      minimumMeters = min(minimumMeters, candidate)
+      let distanceAlongRoute = distanceBeforeSegment + segmentProjection.lengthMeters * segmentProjection.ratio
+      let projection = RouteProgressProjection(
+        distanceAlongRouteMeters: distanceAlongRoute,
+        remainingRouteMeters: max(totalLength - distanceAlongRoute, 0),
+        lateralDistanceMeters: segmentProjection.lateralDistanceMeters
+      )
+      if bestProjection == nil || projection.lateralDistanceMeters < bestProjection!.lateralDistanceMeters {
+        bestProjection = projection
+      }
+      distanceBeforeSegment += segmentProjection.lengthMeters
     }
-    return Int(minimumMeters.rounded())
+    return bestProjection
   }
 
-  private func pointToSegmentDistanceMeters(point: GeoPoint, start: GeoPoint, end: GeoPoint) -> Double {
+  private func projectOntoSegment(point: GeoPoint, start: GeoPoint, end: GeoPoint) -> SegmentProjection {
     let latitudeReference = ((point.latitude + start.latitude + end.latitude) / 3.0) * .pi / 180.0
     let earthRadius = 6_371_000.0
 
@@ -267,16 +344,27 @@ final class LiveNavigationEngine {
     let endProjection = project(end)
     let dx = endProjection.x - startProjection.x
     let dy = endProjection.y - startProjection.y
+    let lengthSquared = (dx * dx) + (dy * dy)
 
-    guard dx != 0 || dy != 0 else {
-      return hypot(pointProjection.x - startProjection.x, pointProjection.y - startProjection.y)
+    guard lengthSquared > 0 else {
+      return SegmentProjection(
+        ratio: 0,
+        lengthMeters: 0,
+        lateralDistanceMeters: hypot(pointProjection.x - startProjection.x, pointProjection.y - startProjection.y)
+      )
     }
 
-    let t = (((pointProjection.x - startProjection.x) * dx) + ((pointProjection.y - startProjection.y) * dy)) / ((dx * dx) + (dy * dy))
-    let clamped = min(max(t, 0), 1)
-    let nearestX = startProjection.x + (clamped * dx)
-    let nearestY = startProjection.y + (clamped * dy)
-    return hypot(pointProjection.x - nearestX, pointProjection.y - nearestY)
+    let ratio = min(
+      max((((pointProjection.x - startProjection.x) * dx) + ((pointProjection.y - startProjection.y) * dy)) / lengthSquared, 0),
+      1
+    )
+    let nearestX = startProjection.x + (ratio * dx)
+    let nearestY = startProjection.y + (ratio * dy)
+    return SegmentProjection(
+      ratio: ratio,
+      lengthMeters: sqrt(lengthSquared),
+      lateralDistanceMeters: hypot(pointProjection.x - nearestX, pointProjection.y - nearestY)
+    )
   }
 }
 

@@ -28,6 +28,7 @@ DEFAULT_FEEDBACK_EMAIL = "kazek5p@gmail.com"
 DEFAULT_CONTACT_FIRST_NAME = "Kazimierz"
 DEFAULT_CONTACT_LAST_NAME = "Parzych"
 DEFAULT_CONTACT_PHONE = "+48501711753"
+MAX_WHATS_NEW_LENGTH = 4000
 
 
 def eprint(message: str) -> None:
@@ -73,6 +74,20 @@ def load_sectioned_text(path: Path) -> dict[str, str]:
         raise RuntimeError(f"Unable to parse localized sections from {path}")
     return sections
 
+
+
+
+def validate_what_to_test_lengths(what_to_test: dict[str, str]) -> None:
+    too_long = [
+        (locale, len(text))
+        for locale, text in what_to_test.items()
+        if len(text) > MAX_WHATS_NEW_LENGTH
+    ]
+    if too_long:
+        details = ", ".join(
+            f"{locale}: {length}/{MAX_WHATS_NEW_LENGTH}" for locale, length in too_long
+        )
+        raise RuntimeError(f"TestFlight What to Test is too long for ASC whatsNew: {details}")
 
 def load_plain_text(path: Path) -> str:
     text = path.read_text(encoding="utf-8").replace("\r\n", "\n").strip()
@@ -453,6 +468,7 @@ def main() -> int:
     beta_description = load_sectioned_text(asc_dir / "TestFlight-beta-description.txt")
     review_notes = load_sectioned_text(asc_dir / "TestFlight-review-notes-strict.txt")
     what_to_test = load_sectioned_text(asc_dir / "TestFlight-what-to-test.txt")
+    validate_what_to_test_lengths(what_to_test)
     beta_license_agreement = load_plain_text(asc_dir / "Beta-License-Agreement.txt")
     end_user_license_agreement = load_plain_text(asc_dir / "End-User-License-Agreement.txt")
 
