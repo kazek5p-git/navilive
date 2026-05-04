@@ -47,7 +47,7 @@ Invoke-GitHub @workflowArgs
 
 Start-Sleep -Seconds 8
 
-$runJson = gh run list --repo $RepoSlug --workflow "ios-signed-testflight.yml" --branch $Ref --limit 1 --json databaseId,status,conclusion,headSha
+$runJson = gh run list --repo $RepoSlug --workflow "ios-signed-testflight.yml" --branch $Ref --limit 1 --json "databaseId,status,conclusion,headSha"
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($runJson)) {
   throw "Unable to resolve the latest workflow run."
 }
