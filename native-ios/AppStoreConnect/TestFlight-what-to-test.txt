@@ -23,6 +23,7 @@ Lista powinna być krótsza i stabilniejsza dla czytnika ekranu. Aktywacja całe
 
 Sprawdź zapis bieżącej pozycji do ulubionych.
 Po wpisaniu własnej nazwy aplikacja powinna zapisać także aktualny adres punktu, współrzędne, przybliżoną dokładność i czas zapisu. Ponowne zapisanie tego samego punktu powinno odświeżyć dane bez tworzenia duplikatu.
+
 ENGLISH
 
 Test walking guidance from the very beginning of a route.

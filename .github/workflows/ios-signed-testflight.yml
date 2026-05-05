@@ -135,6 +135,27 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Apply build number to project.yml
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          build = os.environ["CI_BUILD_NUMBER"].strip()
+          if not re.fullmatch(r"[0-9]+", build):
+              raise SystemExit(f"Invalid CI_BUILD_NUMBER: {build!r}")
+
+          path = Path("native-ios/project.yml")
+          text = path.read_text(encoding="utf-8")
+          text = re.sub(r'CFBundleVersion:\s*"[^"]+"', f'CFBundleVersion: "{build}"', text, count=1)
+          text = re.sub(r'CURRENT_PROJECT_VERSION:\s*[^\n\r]+', f'CURRENT_PROJECT_VERSION: {build}', text, count=1)
+          path.write_text(text, encoding="utf-8")
+          print(f"Prepared native-ios/project.yml for build {build}")
+          PY
+
       - name: Generate Xcode project
         run: |
           cd native-ios
