@@ -74,7 +74,7 @@ final class AppModel: ObservableObject {
   private static let nearbyPOICacheFreshInterval: TimeInterval = 24 * 60 * 60
   private static let nearbyPOICacheMoveThresholdMeters: Double = 800
   private static let nearbyPOICacheAttemptThrottle: TimeInterval = 2 * 60
-  private static let speechAfterSoundDelayNanoseconds: UInt64 = 500_000_000
+  private static let speechAfterSoundDelay: TimeInterval = 0.5
 
   convenience init() {
     self.init(
@@ -928,8 +928,8 @@ final class AppModel: ObservableObject {
     warning: Bool = false
   ) {
     let effectiveCue = cue ?? (warning ? .warning : nil)
-    let shouldDelaySpeech = effectiveCue.map { playSoundCueIfEnabled($0) } ?? false
-    announceNavigationSpeech(message, delayAfterSound: shouldDelaySpeech)
+    let speechDelay = effectiveCue.map { playSoundCueIfEnabled($0) } ?? 0.0
+    announceNavigationSpeech(message, delayAfterSound: speechDelay)
     if settings.vibrationEnabled {
       if warning {
         announcer.hapticWarning()
@@ -940,44 +940,44 @@ final class AppModel: ObservableObject {
   }
 
   private func announceSuccess(message: String) {
-    let shouldDelaySpeech = playSoundCueIfEnabled(.success)
-    announceSpeech(message, delayAfterSound: shouldDelaySpeech)
+    let speechDelay = playSoundCueIfEnabled(.success)
+    announceSpeech(message, delayAfterSound: speechDelay)
     hapticSuccessIfEnabled()
   }
 
   private func announceWarning(message: String) {
-    let shouldDelaySpeech = playSoundCueIfEnabled(.warning)
-    announceSpeech(message, delayAfterSound: shouldDelaySpeech)
+    let speechDelay = playSoundCueIfEnabled(.warning)
+    announceSpeech(message, delayAfterSound: speechDelay)
     if settings.vibrationEnabled {
       announcer.hapticWarning()
     }
   }
 
-  private func announceNavigationSpeech(_ message: String, delayAfterSound: Bool) {
+  private func announceNavigationSpeech(_ message: String, delayAfterSound: TimeInterval) {
     scheduleSpeech(delayAfterSound: delayAfterSound) { [weak self] in
       guard let self else { return }
       self.announcer.announceNavigation(message, settings: self.settings)
     }
   }
 
-  private func announceSpeech(_ message: String, delayAfterSound: Bool) {
+  private func announceSpeech(_ message: String, delayAfterSound: TimeInterval) {
     scheduleSpeech(delayAfterSound: delayAfterSound) { [weak self] in
       guard let self else { return }
       self.announcer.announce(message, settings: self.settings)
     }
   }
 
-  private func scheduleSpeech(delayAfterSound: Bool, action: @escaping @MainActor () -> Void) {
+  private func scheduleSpeech(delayAfterSound: TimeInterval, action: @escaping @MainActor () -> Void) {
     delayedAnnouncementTask?.cancel()
     delayedAnnouncementTask = nil
-    guard delayAfterSound else {
+    guard delayAfterSound > 0 else {
       action()
       return
     }
 
     delayedAnnouncementTask = Task { [weak self] in
       do {
-        try await Task.sleep(nanoseconds: Self.speechAfterSoundDelayNanoseconds)
+        try await Task.sleep(nanoseconds: UInt64(delayAfterSound * 1_000_000_000))
       } catch {
         return
       }
@@ -995,11 +995,10 @@ final class AppModel: ObservableObject {
     }
   }
 
-  @discardableResult
-  private func playSoundCueIfEnabled(_ cue: NavigationSoundCue) -> Bool {
-    guard settings.soundCuesEnabled else { return false }
-    announcer.playSoundCue(cue, volume: settings.soundCueVolume, theme: settings.soundCueTheme)
-    return true
+  private func playSoundCueIfEnabled(_ cue: NavigationSoundCue) -> TimeInterval {
+    guard settings.soundCuesEnabled else { return 0.0 }
+    let queuedStartDelay = announcer.playSoundCue(cue, volume: settings.soundCueVolume, theme: settings.soundCueTheme)
+    return queuedStartDelay + Self.speechAfterSoundDelay
   }
 
   private func soundCue(for stepKind: RouteStepKind?, defaultCue: NavigationSoundCue) -> NavigationSoundCue {

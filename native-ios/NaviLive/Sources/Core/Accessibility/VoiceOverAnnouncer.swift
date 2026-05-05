@@ -12,9 +12,19 @@ enum NavigationSoundCue {
 
 @MainActor
 final class VoiceOverAnnouncer: NSObject {
+  private struct QueuedSoundCue {
+    let data: Data
+    let volume: Float
+    let duration: TimeInterval
+  }
+
   private let synthesizer = AVSpeechSynthesizer()
-  private var cuePlayers: [AVAudioPlayer] = []
+  private var soundCueQueue: [QueuedSoundCue] = []
+  private var soundCuePlaybackTask: Task<Void, Never>?
+  private var activeCuePlayer: AVAudioPlayer?
+  private var nextSoundCuePlaybackDate = Date.distantPast
   private var navigationSpeechSessionActive = false
+  private static let soundCueQueueGapSeconds: TimeInterval = 0.08
 
   override init() {
     super.init()
@@ -121,23 +131,62 @@ final class VoiceOverAnnouncer: NSObject {
     UINotificationFeedbackGenerator().notificationOccurred(.warning)
   }
 
+  @discardableResult
   func playSoundCue(
     _ cue: NavigationSoundCue,
     volume: Double = 0.85,
     theme: SoundCueTheme = .standard
-  ) {
-    prepareNavigationAudioSession()
-    guard let player = try? AVAudioPlayer(data: cue.wavData(theme: theme)) else { return }
-    player.volume = Float(min(max(volume, 0.0), 1.0))
-    player.prepareToPlay()
-    cuePlayers.append(player)
-    player.play()
+  ) -> TimeInterval {
+    let duration = cue.durationSeconds(theme: theme)
+    let startDelay = reserveSoundCueStartDelay(duration: duration)
+    soundCueQueue.append(
+      QueuedSoundCue(
+        data: cue.wavData(theme: theme),
+        volume: Float(min(max(volume, 0.0), 1.0)),
+        duration: duration
+      )
+    )
+    startSoundCueQueueIfNeeded()
+    return startDelay
+  }
 
-    Task { @MainActor [weak self, weak player] in
-      let cleanupDelay = UInt64((cue.durationSeconds(theme: theme) + 0.35) * 1_000_000_000)
-      try? await Task.sleep(nanoseconds: cleanupDelay)
-      guard let player else { return }
-      self?.cuePlayers.removeAll { $0 === player }
+  private func reserveSoundCueStartDelay(duration: TimeInterval) -> TimeInterval {
+    let now = Date()
+    let startDate = nextSoundCuePlaybackDate > now ? nextSoundCuePlaybackDate : now
+    let startDelay = max(0.0, startDate.timeIntervalSince(now))
+    nextSoundCuePlaybackDate = startDate.addingTimeInterval(duration + Self.soundCueQueueGapSeconds)
+    return startDelay
+  }
+
+  private func startSoundCueQueueIfNeeded() {
+    guard soundCuePlaybackTask == nil else { return }
+    soundCuePlaybackTask = Task { @MainActor [weak self] in
+      await self?.runSoundCueQueue()
+    }
+  }
+
+  private func runSoundCueQueue() async {
+    while !soundCueQueue.isEmpty {
+      let item = soundCueQueue.removeFirst()
+      prepareNavigationAudioSession()
+      guard let player = try? AVAudioPlayer(data: item.data) else { continue }
+      activeCuePlayer = player
+      player.volume = item.volume
+      player.prepareToPlay()
+      player.play()
+      let playbackDuration = max(item.duration, player.duration) + Self.soundCueQueueGapSeconds
+      do {
+        try await Task.sleep(nanoseconds: UInt64(playbackDuration * 1_000_000_000))
+      } catch {
+        break
+      }
+      player.stop()
+      activeCuePlayer = nil
+    }
+    activeCuePlayer = nil
+    soundCuePlaybackTask = nil
+    if soundCueQueue.isEmpty {
+      nextSoundCuePlaybackDate = .distantPast
     }
   }
 }

@@ -38,6 +38,8 @@ Do sprawdzenia: rotor Wskazówki trasy, rotor Alerty oraz akcje: powtórz, poprz
 
 Sprawdź kolejność dźwięku i mowy podczas prowadzenia.
 Dźwięk nawigacyjny powinien pojawić się pierwszy, a komunikat głosowy około pół sekundy później, bez nakładania się na początek wypowiedzi.
+Sprawdź kolejkę dźwięków nawigacji.
+Gdy kilka zdarzeń pojawi się szybko po sobie, dźwięki powinny grać po kolei, bez nakładania się, a mowa powinna nadal startować dopiero po właściwym dźwięku.
 Sprawdź zachowanie po aktualizacji.
 Ulubione, wybrany głos oraz ustawienia dźwięków, mowy, wyszukiwania i prowadzenia powinny zostać po zwykłej aktualizacji.
 
@@ -81,5 +83,7 @@ Check the Route Instructions rotor, Alerts rotor and actions: repeat, previous/n
 
 Test sound and speech timing during guidance.
 The navigation sound should play first, followed by speech about half a second later, without covering the beginning of the spoken prompt.
+Test navigation sound queueing.
+When several events happen quickly, sounds should play one after another without overlap, and speech should still start only after the matching sound.
 Test behavior after update.
 Favorites, selected voice and sound, speech, search and guidance settings should be preserved after a normal update.

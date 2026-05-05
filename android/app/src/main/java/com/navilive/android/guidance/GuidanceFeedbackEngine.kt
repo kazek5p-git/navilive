@@ -7,6 +7,7 @@ import android.media.AudioAttributes
 import android.media.AudioTrack
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -58,6 +59,8 @@ class GuidanceFeedbackEngine(context: Context) {
     private var defaultSystemTtsEngineLabel: String? = null
     private var activeSystemTtsEngineLabel: String? = null
     private val soundExecutor = Executors.newSingleThreadExecutor()
+    private val soundQueueLock = Any()
+    private var soundQueueAvailableAtMs = 0L
 
     private val vibrator: Vibrator? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val manager = appContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -148,10 +151,14 @@ class GuidanceFeedbackEngine(context: Context) {
         cue: NavigationSoundCue,
         volumePercent: Int = DefaultSoundCueVolumePercent,
         theme: SoundCueTheme = SoundCueTheme.Standard,
-    ) {
+    ): Long {
+        val sequence = cue.toneSequence(theme)
+        if (sequence.isEmpty()) return 0L
+        val startDelayMs = reserveSoundCueStartDelay(sequence.soundCueDurationMillis())
         soundExecutor.execute {
-            playToneSequence(cue.toneSequence(theme), volumePercent)
+            playToneSequence(sequence, volumePercent)
         }
+        return startDelayMs
     }
 
     fun shutdown() {
@@ -285,9 +292,27 @@ class GuidanceFeedbackEngine(context: Context) {
         runCatching {
             track.write(pcm, 0, pcm.size)
             track.play()
-            Thread.sleep(sequence.sumOf { scaledSoundCueMillis(it.durationMs) + scaledSoundCueMillis(it.gapAfterMs) }.toLong() + 80L)
+            Thread.sleep(pcmDurationMillis(pcm) + SoundCueQueueGapMs)
         }
         track.release()
+    }
+
+    private fun reserveSoundCueStartDelay(durationMs: Long): Long {
+        return synchronized(soundQueueLock) {
+            val now = SystemClock.uptimeMillis()
+            val startAt = maxOf(now, soundQueueAvailableAtMs)
+            soundQueueAvailableAtMs = startAt + durationMs + SoundCueQueueGapMs
+            startAt - now
+        }
+    }
+
+    private fun List<ToneSpec>.soundCueDurationMillis(): Long {
+        return sumOf { scaledSoundCueMillis(it.durationMs) + scaledSoundCueMillis(it.gapAfterMs) }.toLong()
+    }
+
+    private fun pcmDurationMillis(pcm: ByteArray): Long {
+        val sampleCount = pcm.size / 2
+        return ((sampleCount * 1000L) / SoundSampleRate).coerceAtLeast(1L)
     }
 
     private fun generatePcm(sequence: List<ToneSpec>, volumePercent: Int): ByteArray {
@@ -595,5 +620,6 @@ class GuidanceFeedbackEngine(context: Context) {
         const val MajorThirdGain = 0.38
         const val SoundCueOutputGain = 2.83
         const val SoundCueDurationScale = 1.5
+        const val SoundCueQueueGapMs = 80L
     }
 }
