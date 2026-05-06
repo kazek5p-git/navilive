@@ -15,6 +15,7 @@
 		114F447D8756E33026880C60 /* Settings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E618E60700E5B7FE368E913 /* Settings.strings */; };
 		149B0FD2828D394CD33BC9C3 /* CurrentPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6111AE21FC146A326FFD9772 /* CurrentPositionView.swift */; };
 		2246FE7D800CCC18D99E0C48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B7169DB8821683CA1D150F6 /* Assets.xcassets */; };
+		2C5DFE59FCDC822E37A674C4 /* VisualAssistanceLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0908660F36F89BABDEF5F /* VisualAssistanceLauncher.swift */; };
 		2FE005E41F7C6F811DA709AE /* Root.strings in Resources */ = {isa = PBXBuildFile; fileRef = B32B79A6F8C078BF9365FB6F /* Root.strings */; };
 		32317B870D6B5B0EFC16CF37 /* NaviLiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428771D881D5E1B860380050 /* NaviLiveApp.swift */; };
 		32A90C346FF25B8463B97AF2 /* NavigationParityFixturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6981838B8E9CFD597F9FE77 /* NavigationParityFixturesTests.swift */; };
@@ -74,6 +75,7 @@
 		18487FD8F48CF4E503764348 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
 		19F51C1F15A4DA573A439496 /* HeadingAlignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingAlignView.swift; sourceTree = "<group>"; };
 		1A3390178B7F6821845C0D7A /* NaviLive.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NaviLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CF0908660F36F89BABDEF5F /* VisualAssistanceLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualAssistanceLauncher.swift; sourceTree = "<group>"; };
 		21AF396BBE3F7151A48263C3 /* RouteIssueDiagnosticLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteIssueDiagnosticLogger.swift; sourceTree = "<group>"; };
 		2BB269C5F205D76423627479 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Home.strings; sourceTree = "<group>"; };
 		2E547E4E0586BA351ABD6091 /* NaviLiveTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NaviLiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,6 +204,14 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		55D13B94F0A66C6FA8DCA8A6 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				1CF0908660F36F89BABDEF5F /* VisualAssistanceLauncher.swift */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
 		697389983367BD197C70EF06 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				215F322D8E70754A809D0A67 /* Diagnostics */,
+				55D13B94F0A66C6FA8DCA8A6 /* External */,
 				E871D01BF56CEC499D8C7371 /* Location */,
 				83B47FA004F1367A1E8A8F64 /* Navigation */,
 				1AFD03B125BDA5C45B7A9384 /* Persistence */,
@@ -501,6 +512,7 @@
 				9426DAAF93AE77EEC6C8D7A9 /* SharedProductRules.swift in Sources */,
 				D7876FE5B55598059AA96B7F /* StatusCard.swift in Sources */,
 				F371DB5DE0D4354D3DC3127D /* UnavailableStateView.swift in Sources */,
+				2C5DFE59FCDC822E37A674C4 /* VisualAssistanceLauncher.swift in Sources */,
 				A4C47CD9F06CDF8D2E86BE5E /* VoiceOverAnnouncer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -596,7 +608,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -636,7 +648,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
