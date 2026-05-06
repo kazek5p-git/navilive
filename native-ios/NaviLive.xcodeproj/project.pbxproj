@@ -608,7 +608,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -648,7 +648,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

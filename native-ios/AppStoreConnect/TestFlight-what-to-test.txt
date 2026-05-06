@@ -1,27 +1,27 @@
 POLSKI
 
-Sprawdź pomoc wzrokową.
-Na kilku ekranach aplikacji powinien być dostępny przycisk „Pomoc wzrokowa”. Po jego użyciu aplikacja powinna otworzyć Be My Eyes, a jeśli Be My Eyes nie jest zainstalowane, przejść do miejsca instalacji aplikacji.
+Sprawdź prowadzenie po trasie z kilkoma skrętami.
+Wyznacz trasę, na której po wejściu w jedną ulicę trzeba później wykonać kolejny realny skręt, także wtedy, gdy następny odcinek ma tę samą nazwę ulicy. W podglądzie trasy i podczas prowadzenia aplikacja nie powinna pomijać końcowego skrętu.
 
-Sprawdź pomoc wzrokową podczas prowadzenia.
-W aktywnej nawigacji VoiceOver powinien mieć akcję „Pomoc wzrokowa” dostępną z bieżącego ekranu prowadzenia, bez szukania jej w ustawieniach.
+Sprawdź komunikaty skrętów.
+Dla każdego realnego skrętu powinien pojawić się osobny komunikat, np. skręt w lewo, a później kolejny skręt w prawo, zamiast zbyt wczesnej informacji, że cel jest już prosto przed użytkownikiem.
 
-Sprawdź czynności na zapisanych ulubionych.
-Na liście ulubionych ustaw fokus VoiceOver na zapisanym punkcie. Gestem w górę i w dół powinno dać się wybrać akcję wyznaczenia trasy oraz usunięcia z ulubionych, bez wchodzenia w szczegóły punktu.
+Sprawdź krótkie kontynuacje.
+Krótkie, proste odcinki po tej samej ulicy nadal powinny być upraszczane, żeby lista wskazówek nie była niepotrzebnie długa.
 
-Sprawdź czynności na wynikach wyszukiwania.
-Na wyniku wyszukiwania gestem w górę i w dół powinno dać się wybrać wyznaczenie trasy oraz zapisanie albo usunięcie punktu z ulubionych.
+Sprawdź prowadzenie z przejściami dla pieszych.
+Komunikaty o przejściach dla pieszych nie powinny usuwać ani zasłaniać następujących po nich skrętów.
 
 ENGLISH
 
-Test visual help.
-A “Visual help” button should be available on several app screens. Using it should open Be My Eyes, or open the app installation page if Be My Eyes is not installed.
+Test routes with multiple turns.
+Create a route where the user enters one street and later needs to make another real turn, including cases where the next segment has the same street name. The route preview and live guidance should not skip the final turn.
 
-Test visual help during guidance.
-During active navigation, VoiceOver should expose a “Visual help” action from the guidance screen without requiring the user to search for it in settings.
+Test turn announcements.
+Each real turn should have its own instruction, for example a left turn followed later by a right turn, instead of announcing too early that the destination is straight ahead.
 
-Test actions on saved favorites.
-On the favorites list, focus VoiceOver on a saved place. Swiping up or down should let the user choose route creation and removing the favorite without opening place details first.
+Test short continuations.
+Short straight continuations on the same street should still be simplified so the instruction list does not become unnecessarily long.
 
-Test actions on search results.
-On a search result, swiping up or down should let the user choose route creation and saving or removing the place from favorites.
+Test pedestrian crossing guidance.
+Pedestrian crossing alerts should not remove or hide the following turn instruction.
