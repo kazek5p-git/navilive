@@ -73,6 +73,23 @@ struct SearchView: View {
                   AppFormatters.eta(minutes: place.walkEtaMinutes)
                 )
               )
+              .accessibilityAction(named: Text(L10n.text("place.action.route", table: .home))) {
+                Task {
+                  await model.prepareRoute(for: place.id)
+                  if model.selectedRouteSummary != nil {
+                    model.openRouteSummary(place.id)
+                  }
+                }
+              }
+              .accessibilityAction(
+                named: Text(
+                  model.isFavorite(place)
+                    ? L10n.text("place.action.favorite.remove", table: .home)
+                    : L10n.text("place.action.favorite.add", table: .home)
+                )
+              ) {
+                model.toggleFavorite(place)
+              }
             }
           }
         } header: {

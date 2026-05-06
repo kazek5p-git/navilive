@@ -1,21 +1,27 @@
 POLSKI
 
-Sprawdź wyszukiwanie najbliższych przystanków.
-W znanej okolicy wpisz: przystanek, przystanek autobusowy, przystanek tramwajowy, autobus albo tramwaj. Wyniki powinny pokazywać pobliskie przystanki autobusowe i tramwajowe, a nie odległe przypadkowe miejsca. Sprawdź też, czy nazwy, numery i lokalne oznaczenia przystanków pomagają odróżnić podobne wyniki.
+Sprawdź pomoc wzrokową.
+Na kilku ekranach aplikacji powinien być dostępny przycisk „Pomoc wzrokowa”. Po jego użyciu aplikacja powinna otworzyć Be My Eyes, a jeśli Be My Eyes nie jest zainstalowane, przejść do miejsca instalacji aplikacji.
 
-Sprawdź sortowanie wyników po odległości.
-Po wyszukaniu przystanków najbliższe punkty powinny być wyżej na liście. Jeśli w okolicy jest kilka przystanków o podobnej nazwie, aplikacja powinna preferować te bliżej bieżącej pozycji.
+Sprawdź pomoc wzrokową podczas prowadzenia.
+W aktywnej nawigacji VoiceOver powinien mieć akcję „Pomoc wzrokowa” dostępną z bieżącego ekranu prowadzenia, bez szukania jej w ustawieniach.
 
-Sprawdź punkty okolicy po odświeżeniu w tle.
-Po odświeżeniu danych lokalnych wyszukiwanie przystanków powinno działać szybciej i korzystać z punktów zapisanych w cache okolicy.
+Sprawdź czynności na zapisanych ulubionych.
+Na liście ulubionych ustaw fokus VoiceOver na zapisanym punkcie. Gestem w górę i w dół powinno dać się wybrać akcję wyznaczenia trasy oraz usunięcia z ulubionych, bez wchodzenia w szczegóły punktu.
+
+Sprawdź czynności na wynikach wyszukiwania.
+Na wyniku wyszukiwania gestem w górę i w dół powinno dać się wybrać wyznaczenie trasy oraz zapisanie albo usunięcie punktu z ulubionych.
 
 ENGLISH
 
-Test searching for nearby transit stops.
-In a familiar area, search for: stop, bus stop, tram stop, bus, or tram. Results should include nearby bus and tram stops instead of distant unrelated places. Also check whether stop names, numbers, and local references help distinguish similar results.
+Test visual help.
+A “Visual help” button should be available on several app screens. Using it should open Be My Eyes, or open the app installation page if Be My Eyes is not installed.
 
-Test distance-based result ordering.
-After searching for transit stops, the nearest points should appear higher in the list. If several stops have similar names, the app should prefer the ones closer to the current position.
+Test visual help during guidance.
+During active navigation, VoiceOver should expose a “Visual help” action from the guidance screen without requiring the user to search for it in settings.
 
-Test nearby points after background refresh.
-After local data refresh, transit stop search should feel faster and use nearby points stored in the local area cache.
+Test actions on saved favorites.
+On the favorites list, focus VoiceOver on a saved place. Swiping up or down should let the user choose route creation and removing the favorite without opening place details first.
+
+Test actions on search results.
+On a search result, swiping up or down should let the user choose route creation and saving or removing the place from favorites.

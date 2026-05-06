@@ -129,6 +129,7 @@
     <string name="favorites_empty_message">Najpierw wyszukaj miejsce i zapisz je, aby później szybciej uruchamiać trasy.</string>
     <string name="favorites_route">Trasa</string>
     <string name="favorites_remove">Usuń</string>
+    <string name="favorites_open_details">Otwórz szczegóły</string>
     <string name="settings_title">Ustawienia</string>
     <string name="settings_group_local_search_title">Wyszukiwanie lokalne</string>
     <string name="settings_group_guidance_title">Prowadzenie i trasa</string>

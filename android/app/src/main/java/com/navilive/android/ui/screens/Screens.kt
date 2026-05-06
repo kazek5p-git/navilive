@@ -98,6 +98,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
@@ -592,7 +594,10 @@ fun SearchScreen(
     isLoading: Boolean,
     onQueryChange: (String) -> Unit,
     onSubmitSearch: () -> Unit,
+    favoriteIds: Set<String>,
     onSelectPlace: (String) -> Unit,
+    onShowRoute: (String) -> Unit,
+    onToggleFavorite: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -653,9 +658,36 @@ fun SearchScreen(
                 }
             } else {
                 items(results, key = { it.id }) { place ->
+                    val timingLabel = placeTimingLabel(place)
+                    val placeAccessibilityLabel = remember(place.name, place.address, timingLabel) {
+                        listOf(place.name, place.address, timingLabel)
+                            .map { it.trim() }
+                            .filter { it.isNotBlank() }
+                            .joinToString(separator = ". ")
+                    }
+                    val routeActionLabel = stringResource(R.string.place_details_show_route)
+                    val favoriteActionLabel = if (place.id in favoriteIds) {
+                        stringResource(R.string.common_remove_from_favorites)
+                    } else {
+                        stringResource(R.string.common_save_favorite)
+                    }
                     ElevatedCard(
                         onClick = { onSelectPlace(place.id) },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics {
+                                contentDescription = placeAccessibilityLabel
+                                customActions = listOf(
+                                    CustomAccessibilityAction(routeActionLabel) {
+                                        onShowRoute(place.id)
+                                        true
+                                    },
+                                    CustomAccessibilityAction(favoriteActionLabel) {
+                                        onToggleFavorite(place.id)
+                                        true
+                                    },
+                                )
+                            },
                     ) {
                         Column(
                             modifier = Modifier.padding(16.dp),
@@ -663,7 +695,7 @@ fun SearchScreen(
                         ) {
                             Text(place.name, fontWeight = FontWeight.SemiBold)
                             Text(place.address, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text(placeTimingLabel(place), style = MaterialTheme.typography.bodyMedium)
+                            Text(timingLabel, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -1257,6 +1289,7 @@ private fun applyAccessibleSearchEditTextAnnouncement(editText: EditText, label:
 @Composable
 fun FavoritesScreen(
     favorites: List<Place>,
+    onOpenFavoriteDetails: (String) -> Unit,
     onSelectFavorite: (String) -> Unit,
     onRemoveFavorite: (String) -> Unit,
     onAddFavorite: () -> Unit,
@@ -1295,23 +1328,46 @@ fun FavoritesScreen(
                             .filter { it.isNotBlank() }
                             .joinToString(separator = ". ")
                     }
-                    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    val detailsActionLabel = stringResource(R.string.favorites_open_details)
+                    val routeActionLabel = stringResource(R.string.favorites_route)
+                    val removeActionLabel = stringResource(R.string.favorites_remove)
+                    ElevatedCard(
+                        onClick = { onOpenFavoriteDetails(place.id) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics {
+                                contentDescription = placeAccessibilityLabel
+                                onClick(label = detailsActionLabel) {
+                                    onOpenFavoriteDetails(place.id)
+                                    true
+                                }
+                                customActions = listOf(
+                                    CustomAccessibilityAction(routeActionLabel) {
+                                        onSelectFavorite(place.id)
+                                        true
+                                    },
+                                    CustomAccessibilityAction(removeActionLabel) {
+                                        onRemoveFavorite(place.id)
+                                        true
+                                    },
+                                )
+                            },
+                    ) {
                         Column(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
-                                modifier = Modifier.clearAndSetSemantics {
-                                    contentDescription = placeAccessibilityLabel
-                                },
                             ) {
                                 Text(place.name, fontWeight = FontWeight.SemiBold)
                                 Text(place.address, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(timingLabel)
                             }
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clearAndSetSemantics { },
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                             ) {
                                 SecondaryActionButton(

@@ -141,6 +141,7 @@
     <string name="favorites_empty_message">Search for a place first and save it for faster routes later.</string>
     <string name="favorites_route">Route</string>
     <string name="favorites_remove">Remove</string>
+    <string name="favorites_open_details">Open details</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_group_guidance_title">Guidance and route</string>

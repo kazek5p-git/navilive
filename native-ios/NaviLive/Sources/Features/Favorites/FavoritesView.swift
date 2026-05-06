@@ -27,6 +27,17 @@ struct FavoritesView: View {
             }
             .accessibilityLabel(favoriteAccessibilityLabel(for: place))
             .accessibilityHint(L10n.text("favorites.open_hint", table: .home))
+            .accessibilityAction(named: Text(L10n.text("place.action.route", table: .home))) {
+              Task {
+                await model.prepareRoute(for: place.id)
+                if model.selectedRouteSummary != nil {
+                  model.openRouteSummary(place.id)
+                }
+              }
+            }
+            .accessibilityAction(named: Text(L10n.text("place.action.favorite.remove", table: .home))) {
+              model.toggleFavorite(place)
+            }
           }
           .onDelete { offsets in
             for index in offsets.sorted(by: >) {

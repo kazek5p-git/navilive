@@ -341,11 +341,16 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
                 query = uiState.value.searchQuery,
                 results = uiState.value.searchResults,
                 isLoading = uiState.value.isLoadingSearch,
+                favoriteIds = uiState.value.favoriteIds,
                 onQueryChange = viewModel::updateSearchQuery,
                 onSubmitSearch = viewModel::submitSearchQuery,
                 onSelectPlace = { placeId ->
                     navController.navigate(Routes.placeDetails(placeId))
                 },
+                onShowRoute = { placeId ->
+                    navController.navigate(Routes.routeSummary(placeId))
+                },
+                onToggleFavorite = viewModel::toggleFavorite,
                 onBack = { navController.popBackStack() },
             )
         }
@@ -500,6 +505,9 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
         composable(Routes.Favorites) {
             FavoritesScreen(
                 favorites = viewModel.getFavorites(),
+                onOpenFavoriteDetails = { placeId ->
+                    navController.navigate(Routes.placeDetails(placeId))
+                },
                 onSelectFavorite = { placeId ->
                     navController.navigate(Routes.routeSummary(placeId))
                 },
