@@ -2,7 +2,9 @@ param(
     [string]$Tag,
     [string]$Title,
     [string]$NotesFile,
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [switch]$NoVersionBump,
+    [switch]$SkipGitPush
 )
 
 $ErrorActionPreference = "Stop"
@@ -93,25 +95,214 @@ Navi Live $VersionLabel release.
 "@
 }
 
+function Get-AndroidVersionInfo {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$GradleFile
+    )
+
+    $gradleText = Get-Content -Path $GradleFile -Raw -Encoding UTF8
+    $versionCodeMatch = [regex]::Match($gradleText, 'versionCode\s*=\s*([0-9]+)')
+    $versionNameMatch = [regex]::Match($gradleText, 'versionName\s*=\s*"([^"]+)"')
+    $versionCodeValue = Get-RequiredValue -Value $versionCodeMatch.Groups[1].Value -Label "versionCode"
+    $versionNameValue = Get-RequiredValue -Value $versionNameMatch.Groups[1].Value -Label "versionName"
+
+    return [pscustomobject]@{
+        VersionCode = [int]$versionCodeValue
+        VersionName = $versionNameValue
+    }
+}
+
+function Get-NextPatchVersionName {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$VersionName
+    )
+
+    $normalized = $VersionName.Trim().TrimStart('v')
+    if ($normalized -notmatch '^[0-9]+(?:\.[0-9]+)+$') {
+        throw "Nie umiem automatycznie podbic versionName '$VersionName'. Uzyj prostego formatu, np. 1.0.12."
+    }
+
+    $parts = @($normalized.Split('.') | ForEach-Object { [int]$_ })
+    $parts[$parts.Count - 1] = $parts[$parts.Count - 1] + 1
+    return ($parts -join '.')
+}
+
+function Set-AndroidVersionInfo {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$GradleFile,
+        [Parameter(Mandatory = $true)]
+        [int]$VersionCode,
+        [Parameter(Mandatory = $true)]
+        [string]$VersionName
+    )
+
+    $gradleText = Get-Content -Path $GradleFile -Raw -Encoding UTF8
+    $codeRegex = [regex]::new('versionCode\s*=\s*[0-9]+')
+    $nameRegex = [regex]::new('versionName\s*=\s*"[^"]+"')
+    $updated = $codeRegex.Replace($gradleText, "versionCode = $VersionCode", 1)
+    $updated = $nameRegex.Replace($updated, "versionName = `"$VersionName`"", 1)
+    [System.IO.File]::WriteAllText($GradleFile, $updated, [System.Text.UTF8Encoding]::new($false))
+}
+
+function Assert-GitWorktreeClean {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot
+    )
+
+    $statusLines = @(& git -C $RepoRoot status --porcelain=v1 --untracked-files=all)
+    if ($LASTEXITCODE -ne 0) {
+        throw "Nie moge odczytac statusu git przed podbiciem wersji Androida."
+    }
+    if ($statusLines.Count -gt 0) {
+        $preview = ($statusLines | Select-Object -First 20) -join "`n"
+        throw "Nie podbijam Androida automatycznie, bo repo ma niezatwierdzone zmiany. Zacommituj je i ponow publikacje. Pliki:`n$preview"
+    }
+}
+
+function Assert-GitBranchCanBePushed {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$Branch
+    )
+
+    Invoke-Tool -Command @("git", "-C", $RepoRoot, "fetch", "--quiet", "origin", $Branch)
+    & git -C $RepoRoot merge-base --is-ancestor "origin/$Branch" HEAD
+    if ($LASTEXITCODE -ne 0) {
+        throw "Nie podbijam Androida, bo lokalna galaz nie zawiera aktualnego origin/$Branch. Zrob pull/rebase i ponow publikacje."
+    }
+}
+
+function Test-GitHubReleaseExists {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoSlug,
+        [Parameter(Mandatory = $true)]
+        [string]$ReleaseTag
+    )
+
+    $null = & gh api "repos/$RepoSlug/releases/tags/$ReleaseTag" 2>$null
+    return $LASTEXITCODE -eq 0
+}
+
+function Test-RemoteTagExists {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$ReleaseTag
+    )
+
+    $null = & git -C $RepoRoot ls-remote --exit-code --tags origin "refs/tags/$ReleaseTag" 2>$null
+    return $LASTEXITCODE -eq 0
+}
+
+function Get-NextAvailableAndroidVersionName {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CurrentVersionName,
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$RepoSlug
+    )
+
+    $candidate = Get-NextPatchVersionName -VersionName $CurrentVersionName
+    while ($true) {
+        $candidateTag = "v$candidate"
+        if (-not (Test-RemoteTagExists -RepoRoot $RepoRoot -ReleaseTag $candidateTag) -and
+            -not (Test-GitHubReleaseExists -RepoSlug $RepoSlug -ReleaseTag $candidateTag)) {
+            return $candidate
+        }
+        $candidate = Get-NextPatchVersionName -VersionName $candidate
+    }
+}
+
+function New-AndroidVersionBumpCommit {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$GradleFile,
+        [Parameter(Mandatory = $true)]
+        [string]$RepoSlug,
+        [Parameter(Mandatory = $true)]
+        [string]$TargetBranch,
+        [switch]$SkipPush
+    )
+
+    Write-Host '[etap] Podbijam wersje Androida.'
+    Assert-GitWorktreeClean -RepoRoot $RepoRoot
+    Assert-GitBranchCanBePushed -RepoRoot $RepoRoot -Branch $TargetBranch
+
+    $current = Get-AndroidVersionInfo -GradleFile $GradleFile
+    $nextVersionName = Get-NextAvailableAndroidVersionName `
+        -CurrentVersionName $current.VersionName `
+        -RepoRoot $RepoRoot `
+        -RepoSlug $RepoSlug
+    $nextVersionCode = $current.VersionCode + 1
+
+    Set-AndroidVersionInfo -GradleFile $GradleFile -VersionCode $nextVersionCode -VersionName $nextVersionName
+    Invoke-Tool -Command @("git", "-C", $RepoRoot, "add", "android/app/build.gradle.kts")
+    Invoke-Tool -Command @("git", "-C", $RepoRoot, "commit", "-m", "Bump Android version to $nextVersionName")
+
+    if ($SkipPush) {
+        Write-Host '[etap] Pomijam git push na zadanie uzytkownika.'
+    } else {
+        Write-Host '[etap] Wypycham commit z nowa wersja Androida.'
+        Invoke-Tool -Command @("git", "-C", $RepoRoot, "push", "origin", $TargetBranch)
+    }
+
+    Write-Host "Android versionName: $($current.VersionName) -> $nextVersionName"
+    Write-Host "Android versionCode: $($current.VersionCode) -> $nextVersionCode"
+
+    return [pscustomobject]@{
+        VersionCode = $nextVersionCode
+        VersionName = $nextVersionName
+    }
+}
+
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $androidDir = Join-Path $repoRoot "android"
 $gradleFile = Join-Path $androidDir "app\build.gradle.kts"
 $assetPath = Join-Path $androidDir "app\build\release-asset\navi-live.apk"
 $tempPayloadPath = Join-Path $repoRoot ".release-payload.json"
 
-$gradleText = Get-Content -Path $gradleFile -Raw -Encoding UTF8
-$versionNameMatch = [regex]::Match($gradleText, 'versionName\s*=\s*"([^"]+)"')
-$versionName = Get-RequiredValue -Value $versionNameMatch.Groups[1].Value -Label "versionName"
-
-if ([string]::IsNullOrWhiteSpace($Tag)) {
-    $Tag = "v$versionName"
-}
-$userProvidedTitle = -not [string]::IsNullOrWhiteSpace($Title)
-
 $remoteUrl = Invoke-Capture -Command @("git", "-C", $repoRoot, "remote", "get-url", "origin")
 $repoMatch = [regex]::Match($remoteUrl, 'github\.com[:/](.+?)(?:\.git)?$')
 $repoSlug = Get-RequiredValue -Value $repoMatch.Groups[1].Value -Label "GitHub repo slug"
 $targetBranch = Invoke-Capture -Command @("git", "-C", $repoRoot, "branch", "--show-current")
+$targetBranch = Get-RequiredValue -Value $targetBranch -Label "current git branch"
+
+$autoBumpVersion = -not $NoVersionBump -and -not $SkipBuild -and [string]::IsNullOrWhiteSpace($Tag)
+if ($autoBumpVersion) {
+    $versionInfo = New-AndroidVersionBumpCommit `
+        -RepoRoot $repoRoot `
+        -GradleFile $gradleFile `
+        -RepoSlug $repoSlug `
+        -TargetBranch $targetBranch `
+        -SkipPush:$SkipGitPush
+} else {
+    if ($NoVersionBump) {
+        Write-Host '[etap] Pomijam automatyczne podbijanie wersji Androida.'
+    } elseif ($SkipBuild) {
+        Write-Host '[etap] SkipBuild: nie podbijam wersji Androida.'
+    } elseif (-not [string]::IsNullOrWhiteSpace($Tag)) {
+        Write-Host '[etap] Podano wlasny tag: nie podbijam wersji Androida automatycznie.'
+    }
+    $versionInfo = Get-AndroidVersionInfo -GradleFile $gradleFile
+}
+
+$versionName = $versionInfo.VersionName
+if ([string]::IsNullOrWhiteSpace($Tag)) {
+    $Tag = "v$versionName"
+}
+$userProvidedTitle = -not [string]::IsNullOrWhiteSpace($Title)
 
 if (-not $SkipBuild) {
     Write-Host '[etap] Buduje Android release lokalnie.'
