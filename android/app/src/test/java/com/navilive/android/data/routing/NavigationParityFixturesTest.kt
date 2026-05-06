@@ -2,7 +2,10 @@ package com.navilive.android.data.routing
 
 import org.json.JSONArray
 import org.json.JSONObject
+import com.navilive.android.model.RouteStep
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
@@ -37,6 +40,60 @@ class NavigationParityFixturesTest {
         }
     }
 
+
+    @Test
+    fun routeStepSimplificationKeepsSameRoadTurnManeuvers() {
+        val previous = RouteStep(
+            instruction = "Skręć w lewo w Warmińską",
+            distanceMeters = 90,
+            maneuverType = "turn",
+            maneuverModifier = "left",
+            roadName = "Warmińska",
+        )
+        val nextTurn = RouteStep(
+            instruction = "Skręć w prawo w Warmińską",
+            distanceMeters = 120,
+            maneuverType = "turn",
+            maneuverModifier = "right",
+            roadName = "Warmińska",
+        )
+
+        assertFalse(
+            RouteStepSimplificationCore.shouldSuppressRouteStep(
+                step = nextTurn,
+                previous = previous,
+                index = 2,
+                lastIndex = 4,
+            ),
+        )
+    }
+
+    @Test
+    fun routeStepSimplificationStillMergesShortSameRoadContinuations() {
+        val previous = RouteStep(
+            instruction = "Idź Warmińską",
+            distanceMeters = 90,
+            maneuverType = "turn",
+            maneuverModifier = "left",
+            roadName = "Warmińska",
+        )
+        val shortContinuation = RouteStep(
+            instruction = "Kontynuuj Warmińską",
+            distanceMeters = 20,
+            maneuverType = "continue",
+            maneuverModifier = "straight",
+            roadName = "Warmińska",
+        )
+
+        assertTrue(
+            RouteStepSimplificationCore.shouldSuppressRouteStep(
+                step = shortContinuation,
+                previous = previous,
+                index = 2,
+                lastIndex = 4,
+            ),
+        )
+    }
     private fun loadFixtures(): JSONObject {
         val fixturePath = locateFixtureFile()
         return JSONObject(String(Files.readAllBytes(fixturePath)))

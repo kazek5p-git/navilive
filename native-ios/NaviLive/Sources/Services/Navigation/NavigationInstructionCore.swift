@@ -91,6 +91,61 @@ enum NavigationInstructionCore {
   }
 }
 
+
+enum RouteStepSimplificationCore {
+  static func shouldSuppressRouteStep(
+    _ step: RouteStep,
+    previous: RouteStep?,
+    index: Int,
+    lastIndex: Int
+  ) -> Bool {
+    guard let previous else { return false }
+    guard index > 0, index < lastIndex else { return false }
+    guard step.kind == .instruction, previous.kind == .instruction else { return false }
+    if step.maneuverType?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "arrive" {
+      return false
+    }
+    if isTurnLikeManeuver(step) {
+      return false
+    }
+    guard let currentRoad = normalizedRouteRoadName(step.roadName),
+          let previousRoad = normalizedRouteRoadName(previous.roadName),
+          currentRoad == previousRoad else {
+      return false
+    }
+    return step.distanceMeters <= 35
+  }
+
+  static func isTurnLikeManeuver(_ step: RouteStep) -> Bool {
+    let type = step.maneuverType?
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+      .lowercased() ?? ""
+    let modifier = step.maneuverModifier
+      .map { SharedProductRules.Instructions.normalizeModifier($0) } ?? ""
+    if modifier == "straight" { return false }
+    if SharedProductRules.Instructions.supportedModifiers.contains(modifier) { return true }
+    return [
+      "turn",
+      "end of road",
+      "fork",
+      "merge",
+      "on ramp",
+      "off ramp",
+      "roundabout turn",
+      "exit roundabout",
+      "rotary",
+      "roundabout"
+    ].contains(type)
+  }
+
+  private static func normalizedRouteRoadName(_ value: String?) -> String? {
+    let normalized = value?
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+      .lowercased()
+      .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+    return normalized?.isEmpty == false ? normalized : nil
+  }
+}
 private extension String {
   var nilIfBlank: String? {
     trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : self

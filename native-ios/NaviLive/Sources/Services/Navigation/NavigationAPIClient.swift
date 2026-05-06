@@ -738,26 +738,12 @@ actor NavigationAPIClient {
     index: Int,
     lastIndex: Int
   ) -> Bool {
-    guard let previous else { return false }
-    guard index > 0, index < lastIndex else { return false }
-    guard step.kind == .instruction, previous.kind == .instruction else { return false }
-    if step.maneuverType?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "arrive" {
-      return false
-    }
-    guard let currentRoad = normalizedRouteRoadName(step.roadName),
-          let previousRoad = normalizedRouteRoadName(previous.roadName),
-          currentRoad == previousRoad else {
-      return false
-    }
-    return step.isTurnLikeManeuver || step.distanceMeters <= 35
-  }
-
-  private func normalizedRouteRoadName(_ value: String?) -> String? {
-    let normalized = value?
-      .trimmingCharacters(in: .whitespacesAndNewlines)
-      .lowercased()
-      .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
-    return normalized?.isEmpty == false ? normalized : nil
+    RouteStepSimplificationCore.shouldSuppressRouteStep(
+      step,
+      previous: previous,
+      index: index,
+      lastIndex: lastIndex
+    )
   }
 
   private func routeStepsAddingPedestrianCrossings(
@@ -2278,24 +2264,6 @@ actor NavigationAPIClient {
 }
 private extension RouteStep {
   var isTurnLikeManeuver: Bool {
-    let type = maneuverType?
-      .trimmingCharacters(in: .whitespacesAndNewlines)
-      .lowercased() ?? ""
-    let modifier = maneuverModifier
-      .map { SharedProductRules.Instructions.normalizeModifier($0) } ?? ""
-    if modifier == "straight" { return false }
-    if SharedProductRules.Instructions.supportedModifiers.contains(modifier) { return true }
-    return [
-      "turn",
-      "end of road",
-      "fork",
-      "merge",
-      "on ramp",
-      "off ramp",
-      "roundabout turn",
-      "exit roundabout",
-      "rotary",
-      "roundabout"
-    ].contains(type)
+    RouteStepSimplificationCore.isTurnLikeManeuver(self)
   }
 }

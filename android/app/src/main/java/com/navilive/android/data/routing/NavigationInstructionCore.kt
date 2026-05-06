@@ -1,6 +1,9 @@
 package com.navilive.android.data.routing
 
+import com.navilive.android.model.RouteStep
+import com.navilive.android.model.RouteStepKind
 import com.navilive.android.model.SharedProductRules
+import java.util.Locale
 
 internal data class NavigationInstructionDescriptor(
     val strategy: Strategy,
@@ -87,4 +90,50 @@ internal object NavigationInstructionCore {
                 )
         }
     }
+}
+
+internal object RouteStepSimplificationCore {
+
+    fun shouldSuppressRouteStep(
+        step: RouteStep,
+        previous: RouteStep?,
+        index: Int,
+        lastIndex: Int,
+    ): Boolean {
+        if (previous == null || index == 0 || index == lastIndex) return false
+        if (step.kind != RouteStepKind.Instruction || previous.kind != RouteStepKind.Instruction) return false
+        if (step.maneuverType.equals("arrive", ignoreCase = true)) return false
+        if (isTurnLikeManeuver(step)) return false
+        val currentRoad = normalizedRouteRoadName(step.roadName) ?: return false
+        val previousRoad = normalizedRouteRoadName(previous.roadName) ?: return false
+        if (currentRoad != previousRoad) return false
+        return step.distanceMeters <= 35
+    }
+
+    fun isTurnLikeManeuver(step: RouteStep): Boolean {
+        val type = step.maneuverType?.lowercase(Locale.ROOT).orEmpty()
+        val modifier = step.maneuverModifier
+            ?.let(SharedProductRules.Instructions::normalizeModifier)
+            .orEmpty()
+        if (modifier == "straight") return false
+        if (modifier in SharedProductRules.Instructions.supportedModifiers) return true
+        return type in setOf(
+            "turn",
+            "end of road",
+            "fork",
+            "merge",
+            "on ramp",
+            "off ramp",
+            "roundabout turn",
+            "exit roundabout",
+            "rotary",
+            "roundabout",
+        )
+    }
+
+    private fun normalizedRouteRoadName(value: String?): String? = value
+        ?.trim()
+        ?.lowercase(Locale.ROOT)
+        ?.replace(Regex("\\s+"), " ")
+        ?.takeIf { it.isNotBlank() }
 }

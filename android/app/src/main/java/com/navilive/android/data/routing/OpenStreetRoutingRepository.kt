@@ -514,21 +514,12 @@ class OpenStreetRoutingRepository(
         previous: RouteStep?,
         index: Int,
         lastIndex: Int,
-    ): Boolean {
-        if (previous == null || index == 0 || index == lastIndex) return false
-        if (step.kind != RouteStepKind.Instruction || previous.kind != RouteStepKind.Instruction) return false
-        if (step.maneuverType.equals("arrive", ignoreCase = true)) return false
-        val currentRoad = normalizedRouteRoadName(step.roadName) ?: return false
-        val previousRoad = normalizedRouteRoadName(previous.roadName) ?: return false
-        if (currentRoad != previousRoad) return false
-        return step.isTurnLikeManeuver() || step.distanceMeters <= 35
-    }
-
-    private fun normalizedRouteRoadName(value: String?): String? = value
-        ?.trim()
-        ?.lowercase(Locale.ROOT)
-        ?.replace(Regex("\\s+"), " ")
-        ?.takeIf { it.isNotBlank() }
+    ): Boolean = RouteStepSimplificationCore.shouldSuppressRouteStep(
+        step = step,
+        previous = previous,
+        index = index,
+        lastIndex = lastIndex,
+    )
 
     private fun addPedestrianCrossingSteps(
         steps: List<RouteStep>,
@@ -607,26 +598,8 @@ class OpenStreetRoutingRepository(
         return false
     }
 
-    private fun RouteStep.isTurnLikeManeuver(): Boolean {
-        val type = maneuverType?.lowercase(Locale.ROOT).orEmpty()
-        val modifier = maneuverModifier
-            ?.let(SharedProductRules.Instructions::normalizeModifier)
-            .orEmpty()
-        if (modifier == "straight") return false
-        if (modifier in SharedProductRules.Instructions.supportedModifiers) return true
-        return type in setOf(
-            "turn",
-            "end of road",
-            "fork",
-            "merge",
-            "on ramp",
-            "off ramp",
-            "roundabout turn",
-            "exit roundabout",
-            "rotary",
-            "roundabout",
-        )
-    }
+    private fun RouteStep.isTurnLikeManeuver(): Boolean =
+        RouteStepSimplificationCore.isTurnLikeManeuver(this)
 
     private fun queryPedestrianCrossings(pathPoints: List<GeoPoint>): List<RouteCrossingCandidate> {
         val endpoints = buildPedestrianCrossingEndpoints(pathPoints)

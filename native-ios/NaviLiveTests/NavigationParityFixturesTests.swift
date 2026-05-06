@@ -23,6 +23,58 @@ final class NavigationParityFixturesTests: XCTestCase {
     }
   }
 
+
+  func testRouteStepSimplificationKeepsSameRoadTurnManeuvers() {
+    let previous = RouteStep(
+      instruction: "Skręć w lewo w Warmińską",
+      distanceMeters: 90,
+      maneuverType: "turn",
+      maneuverModifier: "left",
+      roadName: "Warmińska"
+    )
+    let nextTurn = RouteStep(
+      instruction: "Skręć w prawo w Warmińską",
+      distanceMeters: 120,
+      maneuverType: "turn",
+      maneuverModifier: "right",
+      roadName: "Warmińska"
+    )
+
+    XCTAssertFalse(
+      RouteStepSimplificationCore.shouldSuppressRouteStep(
+        nextTurn,
+        previous: previous,
+        index: 2,
+        lastIndex: 4
+      )
+    )
+  }
+
+  func testRouteStepSimplificationStillMergesShortSameRoadContinuations() {
+    let previous = RouteStep(
+      instruction: "Idź Warmińską",
+      distanceMeters: 90,
+      maneuverType: "turn",
+      maneuverModifier: "left",
+      roadName: "Warmińska"
+    )
+    let shortContinuation = RouteStep(
+      instruction: "Kontynuuj Warmińską",
+      distanceMeters: 20,
+      maneuverType: "continue",
+      maneuverModifier: "straight",
+      roadName: "Warmińska"
+    )
+
+    XCTAssertTrue(
+      RouteStepSimplificationCore.shouldSuppressRouteStep(
+        shortContinuation,
+        previous: previous,
+        index: 2,
+        lastIndex: 4
+      )
+    )
+  }
   func testNavigationThresholdsMatchSharedFixtures() throws {
     let fixtures = try SharedParityFixtureLoader.load()
     for entry in fixtures.scenarioCases.thresholds {
