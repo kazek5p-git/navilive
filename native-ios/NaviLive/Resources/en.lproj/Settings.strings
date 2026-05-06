@@ -78,7 +78,7 @@
 "settings.app.repository" = "Open project repository";
 "help.title" = "Help and privacy";
 "help.section.tutorial" = "Tutorial";
-"help.tutorial.body" = "Use Search to pick a destination, review the route summary, then continue to walking guidance. Large actions and native controls are kept for reliable VoiceOver focus.";
+"help.tutorial.body" = "Search for a destination, check the route preview, then start walking guidance. During navigation you can open Settings from any screen, use rotor actions on places, save your current location as a favorite, and shake the phone to repeat the current instruction.";
 "help.section.visual_assistance" = "Visual help";
 "help.visual_assistance.body" = "When you need someone else's eyes during a route, Navi Live can quickly open Be My Eyes. Use it for finding a building number, an entrance, or the right intercom button.";
 "help.visual_assistance.open" = "Open Be My Eyes";

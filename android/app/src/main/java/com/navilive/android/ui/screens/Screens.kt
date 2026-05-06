@@ -432,8 +432,8 @@ fun OnboardingScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             StatusCard(
-                title = stringResource(R.string.onboarding_status_title),
-                message = stringResource(R.string.onboarding_status_message),
+                title = stringResource(R.string.tutorial_welcome_status_title),
+                message = stringResource(R.string.tutorial_welcome_status_message),
                 tone = BannerTone.Success,
             )
 
@@ -469,8 +469,8 @@ fun TutorialScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             StatusCard(
-                title = stringResource(R.string.tutorial_status_title),
-                message = stringResource(R.string.tutorial_status_message),
+                title = stringResource(R.string.tutorial_revisit_status_title),
+                message = stringResource(R.string.tutorial_revisit_status_message),
                 tone = BannerTone.Info,
             )
 
@@ -2350,36 +2350,26 @@ private fun SoundCuePreviewRow(
 
 @Composable
 private fun TutorialOverviewCards() {
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics(mergeDescendants = true) {},
-    ) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            CardTitle(stringResource(R.string.onboarding_how_it_works_title))
-            LabelValue(stringResource(R.string.onboarding_search_label), stringResource(R.string.onboarding_search_message))
-            LabelValue(stringResource(R.string.onboarding_align_label), stringResource(R.string.onboarding_align_message))
-            LabelValue(stringResource(R.string.onboarding_navigate_label), stringResource(R.string.onboarding_navigate_message))
+            CardTitle(stringResource(R.string.tutorial_flow_title))
+            LabelValue(stringResource(R.string.tutorial_search_label), stringResource(R.string.tutorial_search_message))
+            LabelValue(stringResource(R.string.tutorial_route_label), stringResource(R.string.tutorial_route_message))
+            LabelValue(stringResource(R.string.tutorial_guidance_label), stringResource(R.string.tutorial_guidance_message))
         }
     }
 
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics(mergeDescendants = true) {},
-    ) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            CardTitle(stringResource(R.string.onboarding_expect_title))
-            Text(
-                text = stringResource(R.string.onboarding_expect_message),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            CardTitle(stringResource(R.string.tutorial_tools_title))
+            LabelValue(stringResource(R.string.tutorial_actions_label), stringResource(R.string.tutorial_actions_message))
+            LabelValue(stringResource(R.string.tutorial_safety_label), stringResource(R.string.tutorial_safety_message))
         }
     }
 }

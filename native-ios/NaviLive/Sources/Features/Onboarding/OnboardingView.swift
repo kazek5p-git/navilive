@@ -16,11 +16,18 @@ struct OnboardingView: View {
 
         Section {
           Label(L10n.text("onboarding.feature.search", table: .onboarding), systemImage: "magnifyingglass")
+          Label(L10n.text("onboarding.feature.route", table: .onboarding), systemImage: "map")
           Label(L10n.text("onboarding.feature.navigation", table: .onboarding), systemImage: "figure.walk")
-          Label(L10n.text("onboarding.feature.accessibility", table: .onboarding), systemImage: "accessibility")
-          Label(L10n.text("onboarding.feature.favorites", table: .onboarding), systemImage: "star")
         } header: {
           Text(L10n.text("onboarding.section.features", table: .onboarding))
+        }
+
+        Section {
+          Label(L10n.text("onboarding.feature.actions", table: .onboarding), systemImage: "gearshape")
+          Label(L10n.text("onboarding.feature.favorites", table: .onboarding), systemImage: "star")
+          Label(L10n.text("onboarding.feature.safety", table: .onboarding), systemImage: "exclamationmark.triangle")
+        } header: {
+          Text(L10n.text("onboarding.section.on_route", table: .onboarding))
         }
 
         Section {

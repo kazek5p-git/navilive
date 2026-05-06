@@ -78,7 +78,7 @@
 "settings.app.repository" = "Otwórz repozytorium projektu";
 "help.title" = "Pomoc i prywatność";
 "help.section.tutorial" = "Samouczek";
-"help.tutorial.body" = "Użyj wyszukiwania, aby wybrać cel, sprawdź podsumowanie trasy, a następnie przejdź do prowadzenia pieszo. Duże akcje i natywne kontrolki są zachowane dla pewnego fokusu VoiceOver.";
+"help.tutorial.body" = "Wyszukaj cel, sprawdź podgląd trasy, a potem rozpocznij prowadzenie. Podczas nawigacji możesz otworzyć Ustawienia z każdego ekranu, używać czynności rotora na punktach, zapisać bieżącą lokalizację do Ulubionych i potrząsnąć telefonem, żeby powtórzyć aktualną wskazówkę.";
 "help.section.visual_assistance" = "Pomoc wzrokowa";
 "help.visual_assistance.body" = "Gdy na trasie potrzebujesz czyjegoś oka, Navi Live może szybko otworzyć Be My Eyes. Użyj tego np. przy szukaniu numeru budynku, wejścia albo przycisku na domofonie.";
 "help.visual_assistance.open" = "Otwórz Be My Eyes";
