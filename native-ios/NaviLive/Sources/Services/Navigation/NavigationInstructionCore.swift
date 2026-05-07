@@ -93,6 +93,8 @@ enum NavigationInstructionCore {
 
 
 enum RouteStepSimplificationCore {
+  private static let shortConnectorStepMaxMeters = 45
+
   static func shouldSuppressRouteStep(
     _ step: RouteStep,
     previous: RouteStep?,
@@ -105,14 +107,15 @@ enum RouteStepSimplificationCore {
     if step.maneuverType?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "arrive" {
       return false
     }
+    let currentRoad = normalizedRouteRoadName(step.roadName)
+    let previousRoad = normalizedRouteRoadName(previous.roadName)
+    let isSameRoad = currentRoad != nil && currentRoad == previousRoad
+    let isShortConnector = step.distanceMeters <= shortConnectorStepMaxMeters
     if isTurnLikeManeuver(step) {
-      return false
+      return isShortConnector && (currentRoad == nil || isSameRoad)
     }
-    guard let currentRoad = normalizedRouteRoadName(step.roadName),
-          let previousRoad = normalizedRouteRoadName(previous.roadName),
-          currentRoad == previousRoad else {
-      return false
-    }
+    guard let currentRoad else { return isShortConnector }
+    guard currentRoad == previousRoad else { return false }
     return step.distanceMeters <= 35
   }
 

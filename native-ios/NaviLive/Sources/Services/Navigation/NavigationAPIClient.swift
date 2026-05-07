@@ -217,6 +217,7 @@ actor NavigationAPIClient {
   private let crossingDuplicateProximityMeters = 3.0
   private let crossingTurnProximityMeters = 8.0
   private let routeStartApproachThresholdMeters = 18.0
+  private let minimumInferredRoadStepDistanceMeters = 45
   private let approachManeuverType = "approach"
   private let minimumUsefulSearchResults = 3
   private let officialChainScore = 3_000
@@ -454,16 +455,19 @@ actor NavigationAPIClient {
       let maneuverPoint = step.maneuver.location.count >= 2
         ? GeoPoint(latitude: step.maneuver.location[1], longitude: step.maneuver.location[0])
         : nil
-      let inferredRoadName = inferredRoadName(
-        for: step,
-        maneuverPoint: maneuverPoint,
-        namedRouteWays: namedRouteWays
-      )
+      let distanceMeters = Int(step.distance.rounded())
+      let inferredRoadName = distanceMeters >= minimumInferredRoadStepDistanceMeters
+        ? inferredRoadName(
+          for: step,
+          maneuverPoint: maneuverPoint,
+          namedRouteWays: namedRouteWays
+        )
+        : nil
       let explicitRoadName = step.name.trimmingCharacters(in: .whitespacesAndNewlines)
       let roadName = explicitRoadName.isEmpty ? inferredRoadName : explicitRoadName
       return RouteStep(
         instruction: humanInstruction(for: step, inferredRoadName: roadName),
-        distanceMeters: Int(step.distance.rounded()),
+        distanceMeters: distanceMeters,
         maneuverPoint: maneuverPoint,
         maneuverType: step.maneuver.type,
         maneuverModifier: step.maneuver.modifier,

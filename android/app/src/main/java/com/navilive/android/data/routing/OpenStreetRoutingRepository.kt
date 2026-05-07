@@ -164,6 +164,7 @@ class OpenStreetRoutingRepository(
         const val CROSSING_DUPLICATE_PROXIMITY_METERS = 3.0
         const val CROSSING_TURN_PROXIMITY_METERS = 8.0
         const val ROUTE_START_APPROACH_THRESHOLD_METERS = 18.0
+        const val MIN_INFERRED_ROAD_STEP_DISTANCE_METERS = 45
         const val APPROACH_MANEUVER_TYPE = "approach"
         const val MINIMUM_USEFUL_SEARCH_RESULTS = 3
         const val OFFICIAL_CHAIN_SCORE = 3_000
@@ -439,18 +440,23 @@ class OpenStreetRoutingRepository(
             } else {
                 null
             }
+            val stepDistanceMeters = step.optDouble("distance", 0.0).roundToInt()
             val stepGeometry = parsePath(step.optJSONObject("geometry"))
-            val inferredRoadName = inferRoadNameForStep(
-                stepGeometry = stepGeometry,
-                maneuverPoint = maneuverPoint,
-                namedRouteWays = namedRouteWays,
-            )
+            val inferredRoadName = if (stepDistanceMeters >= MIN_INFERRED_ROAD_STEP_DISTANCE_METERS) {
+                inferRoadNameForStep(
+                    stepGeometry = stepGeometry,
+                    maneuverPoint = maneuverPoint,
+                    namedRouteWays = namedRouteWays,
+                )
+            } else {
+                null
+            }
             val roadName = step.optString("name").trim().ifBlank {
                 inferredRoadName?.trim().orEmpty()
             }.takeIf { it.isNotBlank() }
             parsed += RouteStep(
                 instruction = instructionForStep(step, roadName),
-                distanceMeters = step.optDouble("distance", 0.0).roundToInt(),
+                distanceMeters = stepDistanceMeters,
                 maneuverPoint = maneuverPoint,
                 maneuverType = maneuver?.optString("type")?.takeIf { it.isNotBlank() },
                 maneuverModifier = maneuver?.optString("modifier")?.takeIf { it.isNotBlank() },

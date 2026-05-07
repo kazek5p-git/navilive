@@ -50,6 +50,57 @@ final class NavigationParityFixturesTests: XCTestCase {
     )
   }
 
+  func testRouteStepSimplificationSuppressesShortUnnamedTurnConnectors() {
+    let previous = RouteStep(
+      instruction: "Continue Main Street",
+      distanceMeters: 80,
+      maneuverType: "turn",
+      maneuverModifier: "left",
+      roadName: "Main Street"
+    )
+    let shortConnector = RouteStep(
+      instruction: "Turn right",
+      distanceMeters: 12,
+      maneuverType: "turn",
+      maneuverModifier: "right",
+      roadName: nil
+    )
+
+    XCTAssertTrue(
+      RouteStepSimplificationCore.shouldSuppressRouteStep(
+        shortConnector,
+        previous: previous,
+        index: 2,
+        lastIndex: 4
+      )
+    )
+  }
+
+  func testRouteStepSimplificationSuppressesShortSameRoadTurnConnectors() {
+    let previous = RouteStep(
+      instruction: "Continue Main Street",
+      distanceMeters: 80,
+      maneuverType: "turn",
+      maneuverModifier: "left",
+      roadName: "Main Street"
+    )
+    let shortConnector = RouteStep(
+      instruction: "Turn right in Main Street",
+      distanceMeters: 20,
+      maneuverType: "turn",
+      maneuverModifier: "right",
+      roadName: "Main Street"
+    )
+
+    XCTAssertTrue(
+      RouteStepSimplificationCore.shouldSuppressRouteStep(
+        shortConnector,
+        previous: previous,
+        index: 2,
+        lastIndex: 4
+      )
+    )
+  }
   func testRouteStepSimplificationStillMergesShortSameRoadContinuations() {
     let previous = RouteStep(
       instruction: "Idź Warmińską",

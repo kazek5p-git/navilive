@@ -69,6 +69,59 @@ class NavigationParityFixturesTest {
     }
 
     @Test
+    fun routeStepSimplificationSuppressesShortUnnamedTurnConnectors() {
+        val previous = RouteStep(
+            instruction = "Continue Main Street",
+            distanceMeters = 80,
+            maneuverType = "turn",
+            maneuverModifier = "left",
+            roadName = "Main Street",
+        )
+        val shortConnector = RouteStep(
+            instruction = "Turn right",
+            distanceMeters = 12,
+            maneuverType = "turn",
+            maneuverModifier = "right",
+            roadName = null,
+        )
+
+        assertTrue(
+            RouteStepSimplificationCore.shouldSuppressRouteStep(
+                step = shortConnector,
+                previous = previous,
+                index = 2,
+                lastIndex = 4,
+            ),
+        )
+    }
+
+    @Test
+    fun routeStepSimplificationSuppressesShortSameRoadTurnConnectors() {
+        val previous = RouteStep(
+            instruction = "Continue Main Street",
+            distanceMeters = 80,
+            maneuverType = "turn",
+            maneuverModifier = "left",
+            roadName = "Main Street",
+        )
+        val shortConnector = RouteStep(
+            instruction = "Turn right in Main Street",
+            distanceMeters = 20,
+            maneuverType = "turn",
+            maneuverModifier = "right",
+            roadName = "Main Street",
+        )
+
+        assertTrue(
+            RouteStepSimplificationCore.shouldSuppressRouteStep(
+                step = shortConnector,
+                previous = previous,
+                index = 2,
+                lastIndex = 4,
+            ),
+        )
+    }
+    @Test
     fun routeStepSimplificationStillMergesShortSameRoadContinuations() {
         val previous = RouteStep(
             instruction = "Idź Warmińską",
