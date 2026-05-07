@@ -1,27 +1,33 @@
 POLSKI
 
 Sprawdź prowadzenie po trasie z kilkoma skrętami.
-Wyznacz trasę, na której po wejściu w jedną ulicę trzeba później wykonać kolejny realny skręt, także wtedy, gdy następny odcinek ma tę samą nazwę ulicy. W podglądzie trasy i podczas prowadzenia aplikacja nie powinna pomijać końcowego skrętu.
+Wyznacz trasę pieszą, na której po jednym skręcie trzeba później wykonać kolejny realny skręt. Aplikacja nie powinna pomijać końcowego manewru ani zbyt wcześnie mówić, że cel jest już prosto przed użytkownikiem.
 
-Sprawdź komunikaty skrętów.
-Dla każdego realnego skrętu powinien pojawić się osobny komunikat, np. skręt w lewo, a później kolejny skręt w prawo, zamiast zbyt wczesnej informacji, że cel jest już prosto przed użytkownikiem.
+Sprawdź, czy zniknęły fałszywe skręty.
+Podczas dojścia do skrzyżowania Navi Live nie powinno mówić sprzecznych komunikatów typu „skręć w prawo”, a zaraz potem „skręć w lewo”, jeśli w rzeczywistości jest tylko jeden istotny manewr.
 
-Sprawdź krótkie kontynuacje.
-Krótkie, proste odcinki po tej samej ulicy nadal powinny być upraszczane, żeby lista wskazówek nie była niepotrzebnie długa.
+Sprawdź krótkie odcinki chodnikowe i łączniki.
+Krótkie, nienazwane fragmenty trasy nie powinny być traktowane jako osobne zakręty. Lista wskazówek powinna być krótsza i bardziej zrozumiała.
 
-Sprawdź prowadzenie z przejściami dla pieszych.
-Komunikaty o przejściach dla pieszych nie powinny usuwać ani zasłaniać następujących po nich skrętów.
+Sprawdź komunikaty przy przejściach dla pieszych.
+Alerty o przejściach dla pieszych powinny nadal działać, ale nie mogą usuwać ani zasłaniać następnego realnego skrętu.
+
+Sprawdź stabilność komunikatów podczas marszu.
+Jeśli użytkownik stoi przy skrzyżowaniu albo GPS chwilowo przeskoczy na sąsiedni odcinek, aplikacja nie powinna chaotycznie przełączać się między kolejnymi instrukcjami.
 
 ENGLISH
 
-Test routes with multiple turns.
-Create a route where the user enters one street and later needs to make another real turn, including cases where the next segment has the same street name. The route preview and live guidance should not skip the final turn.
+Test walking guidance on routes with multiple turns.
+Create a walking route where the user makes one turn and later needs to make another real turn. The app should not skip the final maneuver or announce too early that the destination is straight ahead.
 
-Test turn announcements.
-Each real turn should have its own instruction, for example a left turn followed later by a right turn, instead of announcing too early that the destination is straight ahead.
+Check that false turns are reduced.
+When approaching an intersection, Navi Live should not announce conflicting instructions such as “turn right” followed immediately by “turn left” when there is only one meaningful maneuver.
 
-Test short continuations.
-Short straight continuations on the same street should still be simplified so the instruction list does not become unnecessarily long.
+Check short sidewalk segments and connectors.
+Short unnamed route fragments should not be treated as separate turns. The instruction list should be shorter and easier to understand.
 
-Test pedestrian crossing guidance.
-Pedestrian crossing alerts should not remove or hide the following turn instruction.
+Check pedestrian crossing guidance.
+Pedestrian crossing alerts should still work, but they must not remove or hide the next real turn instruction.
+
+Check guidance stability while walking.
+If the user is near an intersection or GPS briefly jumps to a nearby segment, the app should not rapidly switch between unrelated instructions.
