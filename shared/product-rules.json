@@ -8,10 +8,10 @@
       "multiplier": 1.5
     },
     "offRoute": {
-      "accuracyMinMeters": 15.0,
-      "accuracyMaxMeters": 32.0,
-      "multiplier": 1.8,
-      "minimumThresholdMeters": 30
+      "accuracyMinMeters": 10.0,
+      "accuracyMaxMeters": 20.0,
+      "multiplier": 1.2,
+      "minimumThresholdMeters": 15
     },
     "immediateInstruction": {
       "accuracyMinMeters": 5.0,
@@ -19,7 +19,7 @@
       "thresholdMinMeters": 5,
       "thresholdMaxMeters": 8
     },
-    "autoRecalculateCooldownMs": 15000
+    "autoRecalculateCooldownMs": 6000
   },
   "search": {
     "includeGlobalFallbackIfFewerThan": 3,

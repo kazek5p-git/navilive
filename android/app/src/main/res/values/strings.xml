@@ -457,7 +457,7 @@
     <string name="route_step_turn_with_modifier">Turn %1$s onto %2$s</string>
     <string name="route_step_continue">Continue on %1$s</string>
     <string name="route_step_proceed_toward">Proceed toward %1$s</string>
-    <string name="route_step_crossing">Pedestrian crossing on the route. Use caution.</string>
+    <string name="route_step_crossing">Pedestrian crossing on the route.</string>
     <string name="route_modifier_left">left</string>
     <string name="route_modifier_right">right</string>
     <string name="route_modifier_slight_left">slight left</string>

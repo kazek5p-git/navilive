@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Vend %1$s og halt fram á %2$s.</string>
     <string name="route_step_continue">Halt fram á %1$s.</string>
     <string name="route_step_proceed_toward">Far víðari móti %1$s.</string>
-    <string name="route_step_crossing">Gongubreyt. Far yvir hinumegin gøtuna.</string>
+    <string name="route_step_crossing">Gongubreyt.</string>
     <string name="route_modifier_left">vinstru</string>
     <string name="route_modifier_right">rættur</string>
     <string name="route_modifier_slight_left">eitt sindur til vinstru</string>

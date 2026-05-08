@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Στρίψτε %1$s και συνεχίστε στο %2$s.</string>
     <string name="route_step_continue">Συνεχίστε στο %1$s.</string>
     <string name="route_step_proceed_toward">Προχωρήστε προς το %1$s.</string>
-    <string name="route_step_crossing">Διάβαση πεζών. Περάστε στην άλλη πλευρά του δρόμου.</string>
+    <string name="route_step_crossing">Διάβαση πεζών.</string>
     <string name="route_modifier_left">αριστερά</string>
     <string name="route_modifier_right">δικαίωμα</string>
     <string name="route_modifier_slight_left">ελαφρώς αριστερά</string>

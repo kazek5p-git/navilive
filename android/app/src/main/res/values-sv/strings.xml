@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Vrid %1$s och fortsätt på %2$s.</string>
     <string name="route_step_continue">Fortsätt på %1$s.</string>
     <string name="route_step_proceed_toward">Fortsätt mot %1$s.</string>
-    <string name="route_step_crossing">Övergångsställe. Gå över till andra sidan gatan.</string>
+    <string name="route_step_crossing">Övergångsställe.</string>
     <string name="route_modifier_left">vänster</string>
     <string name="route_modifier_right">rätt</string>
     <string name="route_modifier_slight_left">lätt vänster</string>

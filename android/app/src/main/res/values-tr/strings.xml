@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">%1$s\'da dönün ve devam edin. %2$s.</string>
     <string name="route_step_continue">%1$s\'dan devam edin.</string>
     <string name="route_step_proceed_toward">%1$s\'a doğru ilerleyin.</string>
-    <string name="route_step_crossing">Yaya geçidi. Sokağın diğer tarafına geçin.</string>
+    <string name="route_step_crossing">Yaya geçidi.</string>
     <string name="route_modifier_left">sol</string>
     <string name="route_modifier_right">sağ</string>
     <string name="route_modifier_slight_left">hafif sol</string>

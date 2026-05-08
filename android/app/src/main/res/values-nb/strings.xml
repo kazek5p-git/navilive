@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Snu %1$s og fortsett på %2$s.</string>
     <string name="route_step_continue">Fortsett på %1$s.</string>
     <string name="route_step_proceed_toward">Fortsett mot %1$s.</string>
-    <string name="route_step_crossing">Fotgjengerovergang. Kryss til den andre siden av gaten.</string>
+    <string name="route_step_crossing">Fotgjengerovergang.</string>
     <string name="route_modifier_left">Igjen</string>
     <string name="route_modifier_right">høyre</string>
     <string name="route_modifier_slight_left">svakt til venstre</string>

@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Թեքեք %1$s և շարունակեք %2$s:</string>
     <string name="route_step_continue">Շարունակեք %1$s.</string>
     <string name="route_step_proceed_toward">Շարունակեք դեպի %1$s:</string>
-    <string name="route_step_crossing">Հետիոտնային անցում. Անցեք փողոցի մյուս կողմը։</string>
+    <string name="route_step_crossing">Հետիոտնային անցում.</string>
     <string name="route_modifier_left">ձախ</string>
     <string name="route_modifier_right">ճիշտ</string>
     <string name="route_modifier_slight_left">թեթևակի ձախ</string>

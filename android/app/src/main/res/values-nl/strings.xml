@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Draai %1$s en ga verder op %2$s.</string>
     <string name="route_step_continue">Ga verder op %1$s.</string>
     <string name="route_step_proceed_toward">Ga verder richting %1$s.</string>
-    <string name="route_step_crossing">Voetgangersoversteekplaats. Steek over naar de andere kant van de straat.</string>
+    <string name="route_step_crossing">Voetgangersoversteekplaats.</string>
     <string name="route_modifier_left">links</string>
     <string name="route_modifier_right">rechts</string>
     <string name="route_modifier_slight_left">iets links</string>

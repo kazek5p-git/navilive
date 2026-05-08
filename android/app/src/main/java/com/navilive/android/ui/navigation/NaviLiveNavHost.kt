@@ -341,6 +341,7 @@ fun NaviLiveNavHost(viewModel: NaviLiveViewModel) {
                 query = uiState.value.searchQuery,
                 results = uiState.value.searchResults,
                 isLoading = uiState.value.isLoadingSearch,
+                hasSubmittedSearch = uiState.value.hasSubmittedSearch,
                 favoriteIds = uiState.value.favoriteIds,
                 onQueryChange = viewModel::updateSearchQuery,
                 onSubmitSearch = viewModel::submitSearchQuery,

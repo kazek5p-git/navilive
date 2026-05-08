@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Gira al %1$s i continua al %2$s.</string>
     <string name="route_step_continue">Continueu al %1$s.</string>
     <string name="route_step_proceed_toward">Seguiu cap al %1$s.</string>
-    <string name="route_step_crossing">Pas de vianants. Creuem a l\'altre costat del carrer.</string>
+    <string name="route_step_crossing">Pas de vianants.</string>
     <string name="route_modifier_left">esquerra</string>
     <string name="route_modifier_right">dret</string>
     <string name="route_modifier_slight_left">lleugerament a l\'esquerra</string>

@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Abbiegen auf %1$s und weiter auf %2$s.</string>
     <string name="route_step_continue">Weiterfahren %1$s.</string>
     <string name="route_step_proceed_toward">Fahren Sie weiter in Richtung %1$s.</string>
-    <string name="route_step_crossing">Fußgängerüberweg. Gehen Sie auf die andere Straßenseite.</string>
+    <string name="route_step_crossing">Fußgängerüberweg.</string>
     <string name="route_modifier_left">links</string>
     <string name="route_modifier_right">rechts</string>
     <string name="route_modifier_slight_left">leicht links</string>

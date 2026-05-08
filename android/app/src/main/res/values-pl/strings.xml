@@ -435,7 +435,7 @@
     <string name="route_step_turn_with_modifier">Skręć %1$s w %2$s</string>
     <string name="route_step_continue">Idź dalej: %1$s</string>
     <string name="route_step_proceed_toward">Kieruj się do: %1$s</string>
-    <string name="route_step_crossing">Przejście dla pieszych na trasie. Zachowaj ostrożność.</string>
+    <string name="route_step_crossing">Przejście dla pieszych na trasie.</string>
     <string name="route_modifier_left">w lewo</string>
     <string name="route_modifier_right">w prawo</string>
     <string name="route_modifier_slight_left">lekko w lewo</string>

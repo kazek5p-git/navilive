@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Скрените %1$s и наставите на %2$s.</string>
     <string name="route_step_continue">Наставите на %1$s.</string>
     <string name="route_step_proceed_toward">Наставите према %1$s.</string>
-    <string name="route_step_crossing">Пешачки прелаз. Пређите на другу страну улице.</string>
+    <string name="route_step_crossing">Пешачки прелаз.</string>
     <string name="route_modifier_left">лево</string>
     <string name="route_modifier_right">право</string>
     <string name="route_modifier_slight_left">благо лево</string>

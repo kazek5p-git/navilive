@@ -15,7 +15,7 @@
 "navigation.step.roundabout" = "Enter the roundabout";
 "navigation.step.continue" = "Continue";
 "navigation.step.continue.named" = "Continue on %1$@";
-"navigation.step.crossing" = "Pedestrian crossing on the route. Use caution.";
+"navigation.step.crossing" = "Pedestrian crossing on the route.";
 "navigation.modifier.left" = "left";
 "navigation.modifier.right" = "right";
 "navigation.modifier.slight left" = "slightly left";

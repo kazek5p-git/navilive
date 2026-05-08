@@ -15,7 +15,7 @@
 "navigation.step.roundabout" = "Wejdź na rondo";
 "navigation.step.continue" = "Kontynuuj";
 "navigation.step.continue.named" = "Idź dalej: %1$@";
-"navigation.step.crossing" = "Przejście dla pieszych na trasie. Zachowaj ostrożność.";
+"navigation.step.crossing" = "Przejście dla pieszych na trasie.";
 "navigation.modifier.left" = "w lewo";
 "navigation.modifier.right" = "w prawo";
 "navigation.modifier.slight left" = "lekko w lewo";

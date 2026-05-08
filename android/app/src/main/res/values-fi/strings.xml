@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Käänny %1$s ja jatka numerolla %2$s.</string>
     <string name="route_step_continue">Jatka numeroon %1$s.</string>
     <string name="route_step_proceed_toward">Jatka numeroon %1$s.</string>
-    <string name="route_step_crossing">Suojatie. Ylitä kadun toiselle puolelle.</string>
+    <string name="route_step_crossing">Suojatie.</string>
     <string name="route_modifier_left">vasemmalle</string>
     <string name="route_modifier_right">oikein</string>
     <string name="route_modifier_slight_left">hieman vasemmalle</string>

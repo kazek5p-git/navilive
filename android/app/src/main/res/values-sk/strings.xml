@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Otočte %1$s a pokračujte na %2$s.</string>
     <string name="route_step_continue">Pokračujte na čísle %1$s.</string>
     <string name="route_step_proceed_toward">Pokračujte smerom k %1$s.</string>
-    <string name="route_step_crossing">Prechod pre chodcov. Prejdite na druhú stranu ulice.</string>
+    <string name="route_step_crossing">Prechod pre chodcov.</string>
     <string name="route_modifier_left">vľavo</string>
     <string name="route_modifier_right">správne</string>
     <string name="route_modifier_slight_left">mierne doľava</string>

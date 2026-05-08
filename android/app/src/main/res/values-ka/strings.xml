@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">შეუხვიეთ %1$s და გააგრძელეთ %2$s.</string>
     <string name="route_step_continue">განაგრძეთ %1$s.</string>
     <string name="route_step_proceed_toward">გადადით %1$s-ზე.</string>
-    <string name="route_step_crossing">საცალფეხო გადასასვლელი. გადაკვეთეთ ქუჩის მეორე მხარეს.</string>
+    <string name="route_step_crossing">საცალფეხო გადასასვლელი.</string>
     <string name="route_modifier_left">დატოვა</string>
     <string name="route_modifier_right">უფლება</string>
     <string name="route_modifier_slight_left">ოდნავ მარცხნივ</string>

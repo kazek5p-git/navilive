@@ -235,6 +235,7 @@ data class NaviLiveUiState(
     val places: List<Place> = emptyList(),
     val searchQuery: String = "",
     val searchResults: List<Place> = emptyList(),
+    val hasSubmittedSearch: Boolean = false,
     val favoriteIds: Set<String> = emptySet(),
     val lastRoutePlaceId: String? = null,
     val headingState: HeadingState = HeadingState(),

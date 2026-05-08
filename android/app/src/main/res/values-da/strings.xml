@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Drej %1$s og fortsæt på %2$s.</string>
     <string name="route_step_continue">Fortsæt på %1$s.</string>
     <string name="route_step_proceed_toward">Fortsæt mod %1$s.</string>
-    <string name="route_step_crossing">Fodgængerfelt. Kryds til den anden side af gaden.</string>
+    <string name="route_step_crossing">Fodgængerfelt.</string>
     <string name="route_modifier_left">venstre</string>
     <string name="route_modifier_right">højre</string>
     <string name="route_modifier_slight_left">let til venstre</string>

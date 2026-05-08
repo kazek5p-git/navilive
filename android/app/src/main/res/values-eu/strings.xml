@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Piztu %1$s telefonora eta jarraitu %2$s telefonora.</string>
     <string name="route_step_continue">Jarraitu %1$s telefonoan.</string>
     <string name="route_step_proceed_toward">Jarraitu %1$s zenbakira.</string>
-    <string name="route_step_crossing">Oinezkoentzako pasabidea. Zeharkatu kalearen beste aldera.</string>
+    <string name="route_step_crossing">Oinezkoentzako pasabidea.</string>
     <string name="route_modifier_left">ezker</string>
     <string name="route_modifier_right">eskubidea</string>
     <string name="route_modifier_slight_left">zertxobait ezkerrera</string>

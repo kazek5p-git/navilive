@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Pöörake %1$s ja jätkake %2$s.</string>
     <string name="route_step_continue">Jätkake numbril %1$s.</string>
     <string name="route_step_proceed_toward">Liikuge numbrile %1$s.</string>
-    <string name="route_step_crossing">Ülekäigurada. Ületage teisele poole tänavat.</string>
+    <string name="route_step_crossing">Ülekäigurada.</string>
     <string name="route_modifier_left">vasakule</string>
     <string name="route_modifier_right">õige</string>
     <string name="route_modifier_slight_left">veidi vasakule</string>

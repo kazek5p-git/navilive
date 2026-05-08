@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Повернути %1$s та продовжити %2$s.</string>
     <string name="route_step_continue">Продовжуйте рух по %1$s.</string>
     <string name="route_step_proceed_toward">Продовжуйте рух у напрямку %1$s.</string>
-    <string name="route_step_crossing">Пішохідний перехід. Перейдіть на іншу сторону вулиці.</string>
+    <string name="route_step_crossing">Пішохідний перехід.</string>
     <string name="route_modifier_left">ліворуч</string>
     <string name="route_modifier_right">праворуч</string>
     <string name="route_modifier_slight_left">плавно поверніть ліворуч</string>

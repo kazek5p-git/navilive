@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Dawwar %1$s u kompli fuq %2$s.</string>
     <string name="route_step_continue">Kompli fuq %1$s.</string>
     <string name="route_step_proceed_toward">Ipproċedi lejn %1$s.</string>
-    <string name="route_step_crossing">Pedestrian crossing. Sass għan-naħa l-oħra tat-triq.</string>
+    <string name="route_step_crossing">Pedestrian crossing.</string>
     <string name="route_modifier_left">xellug</string>
     <string name="route_modifier_right">dritt</string>
     <string name="route_modifier_slight_left">ftit xellug</string>

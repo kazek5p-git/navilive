@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Chiama il %1$s e continua al %2$s.</string>
     <string name="route_step_continue">Continua al %1$s.</string>
     <string name="route_step_proceed_toward">Procedi verso %1$s.</string>
-    <string name="route_step_crossing">Passaggio pedonale. Attraversare l\'altro lato della strada.</string>
+    <string name="route_step_crossing">Passaggio pedonale.</string>
     <string name="route_modifier_left">Sinistra</string>
     <string name="route_modifier_right">Giusto</string>
     <string name="route_modifier_slight_left">leggermente a sinistra</string>

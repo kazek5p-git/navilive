@@ -111,21 +111,21 @@
         "name": "minimum_accuracy_clamps_thresholds",
         "accuracyMeters": 3.0,
         "expectedManeuverAdvance": 15.0,
-        "expectedOffRoute": 30,
+        "expectedOffRoute": 15,
         "expectedImmediate": 5
       },
       {
         "name": "mid_accuracy_uses_live_values",
         "accuracyMeters": 12.0,
         "expectedManeuverAdvance": 18.0,
-        "expectedOffRoute": 30,
+        "expectedOffRoute": 15,
         "expectedImmediate": 8
       },
       {
         "name": "high_accuracy_clamps_maximums",
         "accuracyMeters": 40.0,
         "expectedManeuverAdvance": 30.0,
-        "expectedOffRoute": 58,
+        "expectedOffRoute": 24,
         "expectedImmediate": 8
       }
     ],
@@ -200,13 +200,13 @@
       },
       {
         "name": "deviation_below_threshold_does_not_trigger",
-        "deviationMeters": 29,
+        "deviationMeters": 14,
         "accuracyMeters": 5.0,
         "expectedOffRoute": false
       },
       {
         "name": "deviation_above_threshold_triggers",
-        "deviationMeters": 31,
+        "deviationMeters": 16,
         "accuracyMeters": 5.0,
         "expectedOffRoute": true
       }
@@ -220,13 +220,13 @@
       },
       {
         "name": "cooldown_blocks_before_threshold",
-        "elapsedMs": 14999,
+        "elapsedMs": 5999,
         "isRouteRecalculating": false,
         "expectedAllowed": false
       },
       {
         "name": "cooldown_allows_at_threshold",
-        "elapsedMs": 15000,
+        "elapsedMs": 6000,
         "isRouteRecalculating": false,
         "expectedAllowed": true
       }

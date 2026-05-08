@@ -215,7 +215,7 @@ actor NavigationAPIClient {
   private let routeRoadNameRequestTimeout: TimeInterval = 8
   private let crossingRequestTimeout: TimeInterval = 2
   private let crossingDuplicateProximityMeters = 3.0
-  private let crossingTurnProximityMeters = 8.0
+  private let crossingTurnProximityMeters = 30.0
   private let routeStartApproachThresholdMeters = 18.0
   private let minimumInferredRoadStepDistanceMeters = 45
   private let approachManeuverType = "approach"
@@ -853,7 +853,7 @@ actor NavigationAPIClient {
             let projection = projectOntoRoute(pathPoints: pathPoints, point: point) else {
         return nil
       }
-      guard projection.lateralDistanceMeters <= 10 else { return nil }
+      guard projection.lateralDistanceMeters <= 6 else { return nil }
       guard projection.distanceAlongRouteMeters >= 20 else { return nil }
       guard projection.distanceAlongRouteMeters <= routeLength - 20 else { return nil }
       return RouteCrossingCandidate(
@@ -874,7 +874,7 @@ actor NavigationAPIClient {
   }
 
   private func buildPedestrianCrossingURLs(pathPoints: [GeoPoint]) -> [URL] {
-    let box = routeBoundingBox(pathPoints: pathPoints, paddingMeters: 45)
+    let box = routeBoundingBox(pathPoints: pathPoints, paddingMeters: 25)
     let bbox = "(\(formatCoordinate(box.south)),\(formatCoordinate(box.west))," +
       "\(formatCoordinate(box.north)),\(formatCoordinate(box.east)))"
     let query = "[out:json][timeout:\(SharedProductRules.Search.overpassTimeoutSeconds)];" +
@@ -1778,10 +1778,12 @@ actor NavigationAPIClient {
       }
       let displayName = item.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
       let kind = nominatimKind(for: item)
+      let label = candidateName(for: item, fallback: displayName, kind: kind)
+      let rawAddress = formattedAddress(from: item.address, fallback: displayName)
       let place = Place(
         id: "nominatim-\(item.placeID ?? Int.random(in: 1000...9999))",
-        name: candidateName(for: item, fallback: displayName, kind: kind),
-        address: formattedAddress(from: item.address, fallback: displayName),
+        name: label,
+        address: removeDuplicatedAddressPrefix(rawAddress, placeName: label),
         walkDistanceMeters: distance,
         walkEtaMinutes: distance > 0 ? NavigationScenarioCore.distanceBasedEtaMinutes(distanceMeters: distance) : 0,
         point: point
@@ -2180,6 +2182,33 @@ actor NavigationAPIClient {
     AddressFormattingCore.formatAddress(address, fallback: fallback)
   }
 
+  private func removeDuplicatedAddressPrefix(_ address: String, placeName: String) -> String {
+    let parts = address
+      .split(separator: ",")
+      .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+      .filter { !$0.isEmpty }
+    guard parts.count > 1 else { return address }
+    let firstPart = normalizeForSearch(parts[0])
+    let normalizedName = normalizeForSearch(placeName)
+    let nameTail = placeName.split(separator: ":", maxSplits: 1).last.map(String.init) ?? placeName
+    let normalizedNameTail = normalizeForSearch(nameTail)
+    if firstPart == normalizedName || firstPart == normalizedNameTail {
+      return parts.dropFirst().joined(separator: ", ")
+    }
+    return address
+  }
+
+  private func isHouseNumberSearchToken(_ token: String) -> Bool {
+    token.contains { $0.isNumber }
+  }
+
+  private func matchesAddressQueryToken(_ token: String, normalizedText: String, normalizedTokens: [String]) -> Bool {
+    if isHouseNumberSearchToken(token) {
+      return normalizedTokens.contains(token)
+    }
+    return normalizedText.contains(token)
+  }
+
   private func searchScore(for place: Place, query: String, currentLocation: GeoPoint?) -> Int {
     let normalizedQuery = normalizeForSearch(query)
     guard !normalizedQuery.isEmpty else { return 0 }
@@ -2188,8 +2217,20 @@ actor NavigationAPIClient {
     let normalizedAddress = normalizeForSearch(place.address)
     let queryTokens = normalizedQuery.split(separator: " ").map(String.init)
     let nameTokens = normalizedName.split(separator: " ").map(String.init)
+    let combinedAddressText = [normalizedName, normalizedAddress]
+      .filter { !$0.isEmpty }
+      .joined(separator: " ")
+    let combinedAddressTokens = combinedAddressText.split(separator: " ").map(String.init)
+    let exactAddressQuery = queryTokens.contains(where: isHouseNumberSearchToken)
 
     var score = 0
+    if exactAddressQuery {
+      if queryTokens.allSatisfy({ matchesAddressQueryToken($0, normalizedText: combinedAddressText, normalizedTokens: combinedAddressTokens) }) {
+        score += SharedProductRules.Search.exactNameScore + SharedProductRules.Search.nearbyBonus
+      } else {
+        score -= SharedProductRules.Search.nearbyBonus
+      }
+    }
     if normalizedName == normalizedQuery { score += SharedProductRules.Search.exactNameScore }
     if normalizedName.hasPrefix(normalizedQuery) { score += SharedProductRules.Search.prefixNameScore }
 

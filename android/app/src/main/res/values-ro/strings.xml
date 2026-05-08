@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Rotiți %1$s și continuați pe %2$s.</string>
     <string name="route_step_continue">Continuați la %1$s.</string>
     <string name="route_step_proceed_toward">Continuați către %1$s.</string>
-    <string name="route_step_crossing">Trecere de pietoni. Treceți pe partea cealaltă a străzii.</string>
+    <string name="route_step_crossing">Trecere de pietoni.</string>
     <string name="route_modifier_left">stânga</string>
     <string name="route_modifier_right">corect</string>
     <string name="route_modifier_slight_left">usor la stanga</string>

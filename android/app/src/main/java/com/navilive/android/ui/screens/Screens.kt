@@ -3,6 +3,7 @@ package com.navilive.android.ui.screens
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.inputmethod.EditorInfo
@@ -592,6 +593,7 @@ fun SearchScreen(
     query: String,
     results: List<Place>,
     isLoading: Boolean,
+    hasSubmittedSearch: Boolean,
     onQueryChange: (String) -> Unit,
     onSubmitSearch: () -> Unit,
     favoriteIds: Set<String>,
@@ -637,7 +639,7 @@ fun SearchScreen(
             if (isLoading) {
                 item { LinearProgressIndicator(modifier = Modifier.fillMaxWidth()) }
             }
-            if (results.isNotEmpty() || query.isNotBlank()) {
+            if (results.isNotEmpty() || (query.isNotBlank() && hasSubmittedSearch)) {
                 item {
                     SectionHeading(
                         if (query.isBlank()) {
@@ -649,7 +651,7 @@ fun SearchScreen(
                 }
             }
             if (results.isEmpty()) {
-                if (query.isNotBlank() && !isLoading) {
+                if (query.isNotBlank() && hasSubmittedSearch && !isLoading) {
                     item {
                         EmptyStateCard(
                             title = stringResource(R.string.search_empty_results_title),
@@ -665,6 +667,7 @@ fun SearchScreen(
                             .filter { it.isNotBlank() }
                             .joinToString(separator = ". ")
                     }
+                    val detailsActionLabel = stringResource(R.string.place_details_title)
                     val routeActionLabel = stringResource(R.string.place_details_show_route)
                     val favoriteActionLabel = if (place.id in favoriteIds) {
                         stringResource(R.string.common_remove_from_favorites)
@@ -675,8 +678,12 @@ fun SearchScreen(
                         onClick = { onSelectPlace(place.id) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .semantics {
+                            .clearAndSetSemantics {
                                 contentDescription = placeAccessibilityLabel
+                                onClick(label = detailsActionLabel) {
+                                    onSelectPlace(place.id)
+                                    true
+                                }
                                 customActions = listOf(
                                     CustomAccessibilityAction(routeActionLabel) {
                                         onShowRoute(place.id)
@@ -1236,8 +1243,10 @@ private fun AccessibleSearchTextField(
                     }
                     override fun afterTextChanged(s: Editable?) = Unit
                 })
-                setOnEditorActionListener { _, actionId, _ ->
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                setOnEditorActionListener { _, actionId, event ->
+                    val isKeyboardEnter = event?.keyCode == KeyEvent.KEYCODE_ENTER &&
+                        event.action == KeyEvent.ACTION_UP
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH || isKeyboardEnter) {
                         currentOnSearch()
                         true
                     } else {
@@ -1335,7 +1344,7 @@ fun FavoritesScreen(
                         onClick = { onOpenFavoriteDetails(place.id) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .semantics {
+                            .clearAndSetSemantics {
                                 contentDescription = placeAccessibilityLabel
                                 onClick(label = detailsActionLabel) {
                                     onOpenFavoriteDetails(place.id)
@@ -2825,7 +2834,16 @@ private fun EmptyStateCard(
     title: String,
     message: String = "",
 ) {
-    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clearAndSetSemantics {
+                contentDescription = listOf(title, message)
+                    .map { it.trim() }
+                    .filter { it.isNotBlank() }
+                    .joinToString(separator = ". ")
+            },
+    ) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),

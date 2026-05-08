@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Okrenite %1$s i nastavite dalje %2$s.</string>
     <string name="route_step_continue">Nastavite %1$s.</string>
     <string name="route_step_proceed_toward">Nastavite prema %1$s.</string>
-    <string name="route_step_crossing">Pješački prijelaz. Prijeđite na drugu stranu ulice.</string>
+    <string name="route_step_crossing">Pješački prijelaz.</string>
     <string name="route_modifier_left">lijevo</string>
     <string name="route_modifier_right">desno</string>
     <string name="route_modifier_slight_left">blago lijevo</string>

@@ -20,17 +20,17 @@ object SharedProductRules {
         const val maneuverAdvanceAccuracyMaxMeters: Float = 20.0f
         const val maneuverAdvanceMultiplier: Double = 1.5
 
-        const val offRouteAccuracyMinMeters: Float = 15.0f
-        const val offRouteAccuracyMaxMeters: Float = 32.0f
-        const val offRouteMultiplier: Float = 1.8f
-        const val offRouteMinimumThresholdMeters: Int = 30
+        const val offRouteAccuracyMinMeters: Float = 10.0f
+        const val offRouteAccuracyMaxMeters: Float = 20.0f
+        const val offRouteMultiplier: Float = 1.2f
+        const val offRouteMinimumThresholdMeters: Int = 15
 
         const val immediateInstructionAccuracyMinMeters: Float = 5.0f
         const val immediateInstructionAccuracyMaxMeters: Float = 8.0f
         const val immediateInstructionThresholdMinMeters: Int = 5
         const val immediateInstructionThresholdMaxMeters: Int = 8
 
-        const val autoRecalculateCooldownMs: Long = 15000L
+        const val autoRecalculateCooldownMs: Long = 6000L
     }
 
     object Search {

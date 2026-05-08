@@ -85,6 +85,7 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
     private val appContext = application.applicationContext
     private val fakeRepository = FakeNaviLiveRepository()
     private val seedPlaces = fakeRepository.getPlaces()
+    private val seedPlaceIds = seedPlaces.map { it.id }.toSet()
     private val defaultFavoriteIds = fakeRepository.getDefaultFavoriteIds()
     private val retiredDemoPlaceIds = fakeRepository.getRetiredDemoPlaceIds()
     private val defaultLastRoutePlaceId: String? = null
@@ -173,8 +174,8 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
                 val currentBuildLabel = currentAppBuildLabel()
                 val sanitizedCustomFavoritePlaces = persisted.customFavoritePlaces
                     .filter { place ->
-                        place.id.startsWith(CustomFavoritePlaceIdPrefix) &&
-                            place.id !in retiredDemoPlaceIds
+                        place.id !in retiredDemoPlaceIds &&
+                            place.id !in seedPlaceIds
                     }
                 val sanitizedFavoriteIds = (persisted.favoriteIds - retiredDemoPlaceIds) +
                     sanitizedCustomFavoritePlaces.map { it.id }.toSet()
@@ -515,6 +516,7 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
             current.copy(
                 searchQuery = query,
                 searchResults = if (query.isBlank()) current.places else emptyList(),
+                hasSubmittedSearch = false,
                 isLoadingSearch = false,
             )
         }
@@ -527,6 +529,7 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
             current.copy(
                 searchQuery = query,
                 searchResults = if (query.isBlank()) current.places else current.searchResults,
+                hasSubmittedSearch = query.isNotBlank(),
                 isLoadingSearch = query.isNotBlank(),
             )
         }
@@ -2120,6 +2123,9 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
                 NavigationScenarioCore.countdownMilestoneSeconds(secondsToNext)
             }
         } ?: return false
+        if (upcomingStep.kind == RouteStepKind.PedestrianCrossing) {
+            if (cadenceMode != AnnouncementCadenceMode.Distance || milestoneValue > 20) return false
+        }
 
         if (upcomingStepIndex != lastCountdownStepIndex || cadenceMode != lastCountdownCadenceMode) {
             lastCountdownStepIndex = upcomingStepIndex
@@ -2327,7 +2333,7 @@ class NaviLiveViewModel(application: Application) : AndroidViewModel(application
         favoriteIds: Set<String>,
     ): List<Place> {
         return places.filter { place ->
-            place.id.startsWith(CustomFavoritePlaceIdPrefix) && place.id in favoriteIds
+            place.id in favoriteIds && place.id !in seedPlaceIds
         }
     }
 

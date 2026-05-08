@@ -971,6 +971,9 @@ final class AppModel: ObservableObject {
     guard let milestoneValue else {
       return false
     }
+    if update.upcomingStepKind == .pedestrianCrossing {
+      guard cadenceMode == .distance, milestoneValue <= 20 else { return false }
+    }
 
     if upcomingStepIndex != lastCountdownAnnouncementStepIndex || cadenceMode != lastCountdownCadenceMode {
       lastCountdownAnnouncementStepIndex = upcomingStepIndex

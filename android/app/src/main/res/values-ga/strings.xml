@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Cas %1$s agus lean ar aghaidh ar %2$s.</string>
     <string name="route_step_continue">Lean ar aghaidh ar %1$s.</string>
     <string name="route_step_proceed_toward">Lean ar aghaidh i dtreo %1$s.</string>
-    <string name="route_step_crossing">Trasnú coisithe. Trasnaigh go dtí an taobh eile den tsráid.</string>
+    <string name="route_step_crossing">Trasnú coisithe.</string>
     <string name="route_modifier_left">chlé</string>
     <string name="route_modifier_right">ceart</string>
     <string name="route_modifier_slight_left">beag ar chlé</string>

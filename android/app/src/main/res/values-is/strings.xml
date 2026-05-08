@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Snúðu %1$s og haltu áfram á %2$s.</string>
     <string name="route_step_continue">Haltu áfram í síma %1$s.</string>
     <string name="route_step_proceed_toward">Haltu áfram í átt að %1$s.</string>
-    <string name="route_step_crossing">Gangbraut. Farið yfir hinum megin við götuna.</string>
+    <string name="route_step_crossing">Gangbraut.</string>
     <string name="route_modifier_left">vinstri</string>
     <string name="route_modifier_right">rétt</string>
     <string name="route_modifier_slight_left">örlítið til vinstri</string>

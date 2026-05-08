@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Kthejeni %1$s dhe vazhdoni në %2$s.</string>
     <string name="route_step_continue">Vazhdoni në %1$s.</string>
     <string name="route_step_proceed_toward">Vazhdoni drejt %1$s.</string>
-    <string name="route_step_crossing">Kalimi i këmbësorëve. Kaloni në anën tjetër të rrugës.</string>
+    <string name="route_step_crossing">Kalimi i këmbësorëve.</string>
     <string name="route_modifier_left">majtas</string>
     <string name="route_modifier_right">drejtë</string>
     <string name="route_modifier_slight_left">pak majtas</string>

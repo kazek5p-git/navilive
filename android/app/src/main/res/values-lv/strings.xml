@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Pagriezieties %1$s un turpiniet pa %2$s.</string>
     <string name="route_step_continue">Turpiniet pa tālruni %1$s.</string>
     <string name="route_step_proceed_toward">Dodieties uz %1$s.</string>
-    <string name="route_step_crossing">Gājēju pāreja. Pārejiet uz otru ielas pusi.</string>
+    <string name="route_step_crossing">Gājēju pāreja.</string>
     <string name="route_modifier_left">pa kreisi</string>
     <string name="route_modifier_right">pareizi</string>
     <string name="route_modifier_slight_left">nedaudz pa kreisi</string>

@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Pasukite %1$s ir toliau važiuokite %2$s.</string>
     <string name="route_step_continue">Tęskite %1$s.</string>
     <string name="route_step_proceed_toward">Eikite į %1$s.</string>
-    <string name="route_step_crossing">Pėsčiųjų perėja. Pereikite į kitą gatvės pusę.</string>
+    <string name="route_step_crossing">Pėsčiųjų perėja.</string>
     <string name="route_modifier_left">paliko</string>
     <string name="route_modifier_right">teisingai</string>
     <string name="route_modifier_slight_left">šiek tiek į kairę</string>

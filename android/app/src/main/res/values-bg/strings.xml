@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Включете %1$s и продължете нататък %2$s.</string>
     <string name="route_step_continue">Продължете по %1$s.</string>
     <string name="route_step_proceed_toward">Продължете към %1$s.</string>
-    <string name="route_step_crossing">Пешеходна пътека. Преминете от другата страна на улицата.</string>
+    <string name="route_step_crossing">Пешеходна пътека.</string>
     <string name="route_modifier_left">наляво</string>
     <string name="route_modifier_right">надясно</string>
     <string name="route_modifier_slight_left">леко наляво</string>

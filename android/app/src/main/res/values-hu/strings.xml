@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Forduljon a %1$s számon, és folytassa ezen: %2$s.</string>
     <string name="route_step_continue">Haladjon tovább ezen: %1$s.</string>
     <string name="route_step_proceed_toward">Tovább a %1$s számra.</string>
-    <string name="route_step_crossing">Zebra. Átmenni az utca másik oldalára.</string>
+    <string name="route_step_crossing">Zebra.</string>
     <string name="route_modifier_left">balra</string>
     <string name="route_modifier_right">jobbra</string>
     <string name="route_modifier_slight_left">enyhén balra</string>

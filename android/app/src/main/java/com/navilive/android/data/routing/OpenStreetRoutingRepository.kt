@@ -162,7 +162,7 @@ class OpenStreetRoutingRepository(
         const val ROUTE_ROAD_NAME_REQUEST_TIMEOUT_MS = 8_000
         const val CROSSING_REQUEST_TIMEOUT_MS = 2_000
         const val CROSSING_DUPLICATE_PROXIMITY_METERS = 3.0
-        const val CROSSING_TURN_PROXIMITY_METERS = 8.0
+        const val CROSSING_TURN_PROXIMITY_METERS = 30.0
         const val ROUTE_START_APPROACH_THRESHOLD_METERS = 18.0
         const val MIN_INFERRED_ROAD_STEP_DISTANCE_METERS = 45
         const val APPROACH_MANEUVER_TYPE = "approach"
@@ -623,7 +623,7 @@ class OpenStreetRoutingRepository(
             val item = elements.optJSONObject(index) ?: continue
             val point = overpassPoint(item) ?: continue
             val projection = projectOntoRoute(pathPoints, point) ?: continue
-            if (projection.lateralDistanceMeters > 10.0) continue
+            if (projection.lateralDistanceMeters > 6.0) continue
             if (projection.distanceAlongRouteMeters < 20.0) continue
             if (projection.distanceAlongRouteMeters > routeLengthMeters - 20.0) continue
             candidates += RouteCrossingCandidate(
@@ -643,7 +643,7 @@ class OpenStreetRoutingRepository(
     }
 
     private fun buildPedestrianCrossingEndpoints(pathPoints: List<GeoPoint>): List<String> {
-        val box = routeBoundingBox(pathPoints, paddingMeters = 45.0)
+        val box = routeBoundingBox(pathPoints, paddingMeters = 25.0)
         val bbox = "(${formatCoordinate(box.south)},${formatCoordinate(box.west)}," +
             "${formatCoordinate(box.north)},${formatCoordinate(box.east)})"
         val query = "[out:json][timeout:${SharedProductRules.Search.overpassTimeoutSeconds}];" +
@@ -1917,9 +1917,10 @@ class OpenStreetRoutingRepository(
             val latitude = item.optString("lat").toDoubleOrNull() ?: continue
             val longitude = item.optString("lon").toDoubleOrNull() ?: continue
             val displayName = item.optString("display_name").ifBlank { string(R.string.generic_unknown_place) }
-            val address = formatAddress(item.optJSONObject("address"), displayName)
+            val rawAddress = formatAddress(item.optJSONObject("address"), displayName)
             val kind = nominatimKind(item)
             val label = candidateName(item, displayName, kind)
+            val address = removeDuplicatedAddressPrefix(rawAddress, label)
             val point = GeoPoint(latitude, longitude)
             val distance = if (currentPoint == null) {
                 0
@@ -2117,6 +2118,33 @@ class OpenStreetRoutingRepository(
         }
     }
 
+    private fun removeDuplicatedAddressPrefix(address: String, placeName: String): String {
+        val parts = address.split(',')
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+        if (parts.size <= 1) return address
+        val normalizedFirstPart = normalizeForSearch(parts.first())
+        val normalizedName = normalizeForSearch(placeName)
+        val normalizedNameTail = normalizeForSearch(placeName.substringAfter(':').trim())
+        return if (normalizedFirstPart == normalizedName || normalizedFirstPart == normalizedNameTail) {
+            parts.drop(1).joinToString(", ")
+        } else {
+            address
+        }
+    }
+
+    private fun isHouseNumberSearchToken(token: String): Boolean {
+        return token.any { it.isDigit() }
+    }
+
+    private fun matchesAddressQueryToken(token: String, normalizedText: String, normalizedTokens: List<String>): Boolean {
+        return if (isHouseNumberSearchToken(token)) {
+            normalizedTokens.any { it == token }
+        } else {
+            normalizedText.contains(token)
+        }
+    }
+
     private fun searchScore(place: Place, query: String, currentPoint: GeoPoint?): Int {
         val normalizedQuery = normalizeForSearch(query)
         if (normalizedQuery.isBlank()) return 0
@@ -2125,8 +2153,20 @@ class OpenStreetRoutingRepository(
         val normalizedAddress = normalizeForSearch(place.address)
         val queryTokens = normalizedQuery.split(' ').filter { it.isNotBlank() }
         val nameTokens = normalizedName.split(' ').filter { it.isNotBlank() }
+        val combinedAddressText = listOf(normalizedName, normalizedAddress)
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+        val combinedAddressTokens = combinedAddressText.split(' ').filter { it.isNotBlank() }
+        val exactAddressQuery = queryTokens.any(::isHouseNumberSearchToken)
 
         var score = 0
+        if (exactAddressQuery) {
+            if (queryTokens.all { matchesAddressQueryToken(it, combinedAddressText, combinedAddressTokens) }) {
+                score += SharedProductRules.Search.exactNameScore + SharedProductRules.Search.nearbyBonus
+            } else {
+                score -= SharedProductRules.Search.nearbyBonus
+            }
+        }
         if (normalizedName == normalizedQuery) score += SharedProductRules.Search.exactNameScore
         if (normalizedName.startsWith(normalizedQuery)) {
             score += SharedProductRules.Search.prefixNameScore

@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Maacht %1$s a fuert weider op %2$s.</string>
     <string name="route_step_continue">Fuert weider um %1$s.</string>
     <string name="route_step_proceed_toward">Fuert weider Richtung %1$s.</string>
-    <string name="route_step_crossing">Foussgänger Kräizgang. Kräizt op déi aner Säit vun der Strooss.</string>
+    <string name="route_step_crossing">Foussgänger Kräizgang.</string>
     <string name="route_modifier_left">lénks</string>
     <string name="route_modifier_right">riets</string>
     <string name="route_modifier_slight_left">liicht lénks</string>

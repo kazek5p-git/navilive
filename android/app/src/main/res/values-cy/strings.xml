@@ -344,7 +344,7 @@
     <string name="route_step_turn_with_modifier">Trowch %1$s a pharhau ar %2$s.</string>
     <string name="route_step_continue">Parhewch ar %1$s.</string>
     <string name="route_step_proceed_toward">Ewch ymlaen tuag at %1$s.</string>
-    <string name="route_step_crossing">Croesfan i gerddwyr. Croeswch i ochr arall y stryd.</string>
+    <string name="route_step_crossing">Croesfan i gerddwyr.</string>
     <string name="route_modifier_left">chwith</string>
     <string name="route_modifier_right">iawn</string>
     <string name="route_modifier_slight_left">ychydig ar ôl</string>
