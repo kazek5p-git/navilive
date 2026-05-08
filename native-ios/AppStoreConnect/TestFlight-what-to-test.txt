@@ -1,33 +1,33 @@
 POLSKI
 
-Sprawdź prowadzenie po trasie z kilkoma skrętami.
-Wyznacz trasę pieszą, na której po jednym skręcie trzeba później wykonać kolejny realny skręt. Aplikacja nie powinna pomijać końcowego manewru ani zbyt wcześnie mówić, że cel jest już prosto przed użytkownikiem.
+Sprawdź wyszukiwanie adresów i miejsc.
+Wyniki nie powinny dublować nazwy ulicy ani miejsca, a adresy z numerami powinny być rozpoznawane dokładniej.
 
-Sprawdź, czy zniknęły fałszywe skręty.
-Podczas dojścia do skrzyżowania Navi Live nie powinno mówić sprzecznych komunikatów typu „skręć w prawo”, a zaraz potem „skręć w lewo”, jeśli w rzeczywistości jest tylko jeden istotny manewr.
+Sprawdź prowadzenie po zejściu z trasy.
+Navi Live powinno szybciej wykrywać, że użytkownik poszedł inaczej, i szybciej przeliczać trasę.
 
-Sprawdź krótkie odcinki chodnikowe i łączniki.
-Krótkie, nienazwane fragmenty trasy nie powinny być traktowane jako osobne zakręty. Lista wskazówek powinna być krótsza i bardziej zrozumiała.
+Sprawdź komunikaty o przejściach dla pieszych.
+Alerty są krótsze i nie powinny zasłaniać ważnych skrętów ani odliczać z dużej odległości.
 
-Sprawdź komunikaty przy przejściach dla pieszych.
-Alerty o przejściach dla pieszych powinny nadal działać, ale nie mogą usuwać ani zasłaniać następnego realnego skrętu.
+Sprawdź zapisywanie ulubionych z wyników wyszukiwania.
+Punkt dodany do ulubionych powinien być widoczny na ekranie Ulubione po ponownym wejściu do aplikacji.
 
-Sprawdź stabilność komunikatów podczas marszu.
-Jeśli użytkownik stoi przy skrzyżowaniu albo GPS chwilowo przeskoczy na sąsiedni odcinek, aplikacja nie powinna chaotycznie przełączać się między kolejnymi instrukcjami.
+Sprawdź dostępność list.
+Karty wyników, puste listy i ulubione nie powinny być czytane podwójnie przez czytnik ekranu.
 
 ENGLISH
 
-Test walking guidance on routes with multiple turns.
-Create a walking route where the user makes one turn and later needs to make another real turn. The app should not skip the final maneuver or announce too early that the destination is straight ahead.
+Check address and place search.
+Results should no longer duplicate street or place names, and addresses with house numbers should be matched more accurately.
 
-Check that false turns are reduced.
-When approaching an intersection, Navi Live should not announce conflicting instructions such as “turn right” followed immediately by “turn left” when there is only one meaningful maneuver.
+Check guidance after leaving the route.
+Navi Live should detect off-route walking sooner and recalculate the route faster.
 
-Check short sidewalk segments and connectors.
-Short unnamed route fragments should not be treated as separate turns. The instruction list should be shorter and easier to understand.
+Check pedestrian crossing messages.
+Crossing alerts are shorter and should not hide important turns or count down from long distances.
 
-Check pedestrian crossing guidance.
-Pedestrian crossing alerts should still work, but they must not remove or hide the next real turn instruction.
+Check saving favorites from search results.
+A place saved from search results should remain visible on the Favorites screen after reopening the app.
 
-Check guidance stability while walking.
-If the user is near an intersection or GPS briefly jumps to a nearby segment, the app should not rapidly switch between unrelated instructions.
+Check list accessibility.
+Result cards, empty lists, and favorites should not be read twice by the screen reader.
