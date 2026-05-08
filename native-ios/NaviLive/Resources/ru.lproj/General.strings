@@ -1,0 +1,10 @@
+"common.ok" = "ОК";
+"common.settings" = "Настройки";
+"common.cancel" = "Отменить";
+"common.save" = "Сохранить";
+"common.back" = "Назад";
+"common.continue" = "Продолжить";
+"formatter.minute.one" = "1 минута";
+"formatter.minute.other" = "%d минут";
+"formatter.accuracy.unknown" = "Точность GPS не определена";
+"formatter.accuracy.value" = "Точность GPS %d метров";
