@@ -16,5 +16,5 @@
 "permissions.status.title" = "Требуется разрешение на местоположение";
 "permissions.status.message" = "Разрешите доступ к местоположению, чтобы Navi Live мог находить ближайшие места и строить пешеходные маршруты от вашей текущей позиции.";
 "permissions.action.allow" = "Разрешить доступ к местоположению";
-"permissions.action.later" = "Пока продолжить";
+"permissions.action.later" = "Пока пропустить";
 "permissions.footer" = "Доступ к местоположению можно изменить позже в настройках iPhone.";
