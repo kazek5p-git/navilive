@@ -1,0 +1,12 @@
+"root.title" = "Navi Live";
+"root.section.status" = "Состояние";
+"root.section.routes" = "Каркас проекта";
+"root.status.scaffold_ready" = "Нативный каркас iOS готов. Навигация, доступность (специальные возможности) и конвейер TestFlight будут добавлены на следующих этапах.";
+"root.status.scaffold_ready_hint" = "Этот статус означает, что каркас проекта для iPhone успешно создан.";
+"root.link.onboarding" = "Обучение";
+"root.link.home" = "Главный экран";
+"root.link.settings" = "Настройки";
+"root.placeholder.onboarding" = "Процесс обучения будет реализован на следующем этапе.";
+"root.placeholder.home" = "Главный экран для пешеходной навигации будет реализован на следующем этапе.";
+"root.placeholder.settings" = "Настройки, элементы управления конфиденциальностью и специальными возможностями будут реализованы на следующем этапе.";
+"root.bootstrapping" = "Подготовка Navi Live к первому запуску.";

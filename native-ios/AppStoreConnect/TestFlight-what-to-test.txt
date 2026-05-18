@@ -1,33 +1,27 @@
 POLSKI
 
-Sprawdź wyszukiwanie adresów i miejsc.
-Wyniki nie powinny dublować nazwy ulicy ani miejsca, a adresy z numerami powinny być rozpoznawane dokładniej.
+Sprawdź rosyjską lokalizację na iPhonie.
+Ustaw język telefonu na rosyjski albo dodaj rosyjski jako preferowany język aplikacji i sprawdź ekran główny, wyszukiwanie, ustawienia, samouczek oraz komunikaty nawigacji.
 
-Sprawdź prowadzenie po zejściu z trasy.
-Navi Live powinno szybciej wykrywać, że użytkownik poszedł inaczej, i szybciej przeliczać trasę.
+Sprawdź samouczek i uprawnienia.
+Wszystkie teksty samouczka, prośby o lokalizację i opisy uprawnień powinny być po rosyjsku, bez pustych pól i bez powrotu do angielskiego.
 
-Sprawdź komunikaty o przejściach dla pieszych.
-Alerty są krótsze i nie powinny zasłaniać ważnych skrętów ani odliczać z dużej odległości.
+Sprawdź komunikaty VoiceOver.
+Rosyjskie etykiety powinny być czytane poprawnie, bez mieszania kolejności elementów i bez powtarzania tekstów.
 
-Sprawdź zapisywanie ulubionych z wyników wyszukiwania.
-Punkt dodany do ulubionych powinien być widoczny na ekranie Ulubione po ponownym wejściu do aplikacji.
-
-Sprawdź dostępność list.
-Karty wyników, puste listy i ulubione nie powinny być czytane podwójnie przez czytnik ekranu.
+Sprawdź podstawową stabilność.
+Wyszukaj miejsce, otwórz szczegóły, dodaj punkt do ulubionych i przejdź do ustawień. Aplikacja nie powinna się zamykać ani tracić fokusu VoiceOver.
 
 ENGLISH
 
-Check address and place search.
-Results should no longer duplicate street or place names, and addresses with house numbers should be matched more accurately.
+Check the Russian localization on iPhone.
+Set the phone language to Russian or add Russian as the preferred app language, then check the home screen, search, settings, tutorial, and navigation messages.
 
-Check guidance after leaving the route.
-Navi Live should detect off-route walking sooner and recalculate the route faster.
+Check onboarding and permissions.
+All onboarding text, location permission prompts, and permission descriptions should be in Russian, with no empty fields and no fallback to English.
 
-Check pedestrian crossing messages.
-Crossing alerts are shorter and should not hide important turns or count down from long distances.
+Check VoiceOver announcements.
+Russian labels should be read correctly, without mixed focus order and without repeated text.
 
-Check saving favorites from search results.
-A place saved from search results should remain visible on the Favorites screen after reopening the app.
-
-Check list accessibility.
-Result cards, empty lists, and favorites should not be read twice by the screen reader.
+Check basic stability.
+Search for a place, open details, save a favorite, and open settings. The app should not close unexpectedly or lose VoiceOver focus.

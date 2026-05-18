@@ -72,22 +72,27 @@
 		0C14B84A8028291FF5A6A19A /* SharedProductRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedProductRules.swift; sourceTree = "<group>"; };
 		11124081EBC132E3DFB9E66C /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		140D517E87A2626B5B45D480 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		14B27B7370DC9DA92C55AE72 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Onboarding.strings; sourceTree = "<group>"; };
 		18487FD8F48CF4E503764348 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
 		19F51C1F15A4DA573A439496 /* HeadingAlignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingAlignView.swift; sourceTree = "<group>"; };
 		1A3390178B7F6821845C0D7A /* NaviLive.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NaviLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A5B98CFF773E6E9266778B6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Settings.strings; sourceTree = "<group>"; };
 		1CF0908660F36F89BABDEF5F /* VisualAssistanceLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualAssistanceLauncher.swift; sourceTree = "<group>"; };
 		21AF396BBE3F7151A48263C3 /* RouteIssueDiagnosticLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteIssueDiagnosticLogger.swift; sourceTree = "<group>"; };
 		2BB269C5F205D76423627479 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Home.strings; sourceTree = "<group>"; };
 		2E547E4E0586BA351ABD6091 /* NaviLiveTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NaviLiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EC9B2F7A8251E3D24D7E3B8 /* UnavailableStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnavailableStateView.swift; sourceTree = "<group>"; };
 		303A53D948A6CBD623AD9B0C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		3341B7DE3B65A47A2C26AE70 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/General.strings; sourceTree = "<group>"; };
 		3DF99941A52A12594B3A5578 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		428771D881D5E1B860380050 /* NaviLiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLiveApp.swift; sourceTree = "<group>"; };
+		4F524B3B7EABD22927683431 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Root.strings; sourceTree = "<group>"; };
 		50842925B9EA45DD9585BC90 /* LiveNavigationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveNavigationEngine.swift; sourceTree = "<group>"; };
 		5830FE5A70C79B8F080FFD8B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		5E361961C8B6F61F729EFF3E /* ActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtons.swift; sourceTree = "<group>"; };
 		603749CEDD31A05A82058745 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Settings.strings; sourceTree = "<group>"; };
 		6111AE21FC146A326FFD9772 /* CurrentPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPositionView.swift; sourceTree = "<group>"; };
+		63C3B312DCE8D7FFC8EEBD11 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6474DFF0BACBC031D1B8BA0F /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Onboarding.strings; sourceTree = "<group>"; };
 		64B13E0C2899C8BAEEC1F046 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Navigation.strings; sourceTree = "<group>"; };
 		6B7169DB8821683CA1D150F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -108,7 +113,9 @@
 		BD7DF491966F886FE4B8E440 /* VoiceOverAnnouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceOverAnnouncer.swift; sourceTree = "<group>"; };
 		C1265EB8C59C572255AA4444 /* PlaceDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailsView.swift; sourceTree = "<group>"; };
 		C999463A33A2E6E5E4838427 /* StatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCard.swift; sourceTree = "<group>"; };
+		CE1F8452C787C4995A6CB7A1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Navigation.strings; sourceTree = "<group>"; };
 		D343A44E647E9CDBA9A67965 /* NavigationAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAPIClient.swift; sourceTree = "<group>"; };
+		D4AC7A3E859717585F3ED141 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Home.strings; sourceTree = "<group>"; };
 		DB0583A10EB7C7A75040257D /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/General.strings; sourceTree = "<group>"; };
 		DE495BDC236816C4F38298E9 /* NavigationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModels.swift; sourceTree = "<group>"; };
 		E64560F0226C2CDBDAF74D1D /* HelpPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPrivacyView.swift; sourceTree = "<group>"; };
@@ -442,6 +449,7 @@
 				Base,
 				en,
 				pl,
+				ru,
 			);
 			mainGroup = F25F8011A9AEC2007B26D456;
 			minimizedProjectReferenceProxies = 1;
@@ -542,6 +550,7 @@
 			children = (
 				603749CEDD31A05A82058745 /* en */,
 				AEDC7411BA5E93890565C6D9 /* pl */,
+				1A5B98CFF773E6E9266778B6 /* ru */,
 			);
 			name = Settings.strings;
 			sourceTree = "<group>";
@@ -551,6 +560,7 @@
 			children = (
 				140D517E87A2626B5B45D480 /* en */,
 				9E5B7CC5D023444989B3ED92 /* pl */,
+				63C3B312DCE8D7FFC8EEBD11 /* ru */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -560,6 +570,7 @@
 			children = (
 				E9F9905A660DAB0DD278DCB8 /* en */,
 				6474DFF0BACBC031D1B8BA0F /* pl */,
+				14B27B7370DC9DA92C55AE72 /* ru */,
 			);
 			name = Onboarding.strings;
 			sourceTree = "<group>";
@@ -569,6 +580,7 @@
 			children = (
 				E73F4234A24A54E9E134A27B /* en */,
 				DB0583A10EB7C7A75040257D /* pl */,
+				3341B7DE3B65A47A2C26AE70 /* ru */,
 			);
 			name = General.strings;
 			sourceTree = "<group>";
@@ -578,6 +590,7 @@
 			children = (
 				B98390D282AE6B28D8B7562D /* en */,
 				716EEFF1E85C5EB9416140E1 /* pl */,
+				4F524B3B7EABD22927683431 /* ru */,
 			);
 			name = Root.strings;
 			sourceTree = "<group>";
@@ -587,6 +600,7 @@
 			children = (
 				64B13E0C2899C8BAEEC1F046 /* en */,
 				0AEAC83D4760702B11A12B34 /* pl */,
+				CE1F8452C787C4995A6CB7A1 /* ru */,
 			);
 			name = Navigation.strings;
 			sourceTree = "<group>";
@@ -596,6 +610,7 @@
 			children = (
 				2BB269C5F205D76423627479 /* en */,
 				E6A59B85F4252BF167DAA794 /* pl */,
+				D4AC7A3E859717585F3ED141 /* ru */,
 			);
 			name = Home.strings;
 			sourceTree = "<group>";
@@ -608,7 +623,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -648,7 +663,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				INFOPLIST_FILE = NaviLive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
